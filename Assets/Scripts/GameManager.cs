@@ -14,11 +14,16 @@ public class GameManager : MonoBehaviour
     public GameObject[] unitsArrayType2 = null;
     public GameObject[] unitsArrayType3 = null;
 
+    public GameObject[] turretsArray = null;
+
     public Image[] unitIconCountDown; 
     public GameObject getUnitToCreat(int unitType, int index)
     {
         switch (unitType)
         {
+            case 0:
+                if (index >= turretsArray.Length) { return null; }
+                return turretsArray[index];
             case 1:
                 if (index >= unitsArrayType1.Length) { return null; }
                 return unitsArrayType1[index];
@@ -64,11 +69,15 @@ public class GameManager : MonoBehaviour
        
 
         balanceText.text =  currentBalance.ToString();
+
         EnemyBase.CreatedEnemy += AddEnemy;
         Enemy.enemyDied += RemoveEnemy;
 
         MyUnit.unitCreated += AddUnit;
         MyUnit.unitDie += removeUnit;
+
+        Turret.turretCreated += AddTurret;
+        Turret.turretDie += RemoveTurret;
 
         BaseHelth.baseDistroyed += GameOver;
 
@@ -108,33 +117,6 @@ public class GameManager : MonoBehaviour
         balanceText.text = currentBalance.ToString();
     }
 
-    /*
-    public void CreatUnit(int index)
-    {
-        //if (currentBalance < price) { return; }
-        foreach (var cell in cells)
-        {
-            if (cell.GetUnitOnPlace() == null)
-            {
-
-                
-                Vector3 pos = cell.gameObject.transform.position;
-                pos.y = pos.y + 1;
-                GameObject newUnit = getUnitToCreat(index);
-                int price = newUnit.GetComponent<MyUnit>().price;
-                if (currentBalance < price) { return; }
-
-                GameObject unit = Instantiate(newUnit, pos, Quaternion.identity);
-             
-                unit.GetComponent<MyUnit>().SetCell(cell);
-                currentBalance -= price;
-                balanceText.text = currentBalance.ToString();
-                break;
-            }
-        }
-        
-    }*/
-
     public void OnDestroy()
     {
         EnemyBase.CreatedEnemy -= AddEnemy;
@@ -171,6 +153,17 @@ public class GameManager : MonoBehaviour
     {
         AllUnits.Remove(unit);
     }
+
+    void AddTurret(GameObject turret)
+    {
+        AllUnits.Add(turret);
+    }
+
+    public void RemoveTurret(GameObject turret)
+    {
+        AllUnits.Remove(turret);
+    }
+
 
     public void GameOver(string result)
     {

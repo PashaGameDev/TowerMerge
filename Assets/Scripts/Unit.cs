@@ -74,7 +74,7 @@ public class Unit : MonoBehaviour
         
         FindTarget();
 
-        if (target != null) { return; }//offset = chasingDistance; targetPoit = target.transform; } else { offset = 0.2f; }
+        if (target != null) { return; }
 
        
         if (targetPoit == null) {  GetNextPoint(); return; }
@@ -91,12 +91,7 @@ public class Unit : MonoBehaviour
 
     void GetNextPoint()
     {
-        // if (target == enemyBase)
-        // {
-        //     AttackBase();
-        //     return;
-        // }
-
+       
         if (enemyBase == null) { return; }
         float minDis = Vector3.Distance(transform.position, allPoints[0].transform.position);
         int index = 0;

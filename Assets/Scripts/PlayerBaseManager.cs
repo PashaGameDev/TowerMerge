@@ -9,7 +9,7 @@ public class PlayerBaseManager : MonoBehaviour
     [SerializeField] private float countDown = 5f;
     [SerializeField] private int superShotPower = 100;
     [SerializeField] private Image superShotImage = null;
-    [SerializeField] private LayerMask enemyLayer = new LayerMask();
+    [SerializeField] private LayerMask touchLayer = new LayerMask();
     [SerializeField] private GameObject superShootVFX = null;
 
     private float currentTime = 0f;
@@ -44,7 +44,7 @@ public class PlayerBaseManager : MonoBehaviour
 
     void SuperShot()
     {
-        if (shootAmount == 0) { return; }
+       
 #if UNITY_EDITOR
         if (Mouse.current.leftButton.wasReleasedThisFrame)
         {
@@ -76,19 +76,38 @@ public class PlayerBaseManager : MonoBehaviour
 #endif
     }
 
+  
+
     void SuperShotAction(Vector3 inputPos)
     {
         Ray ray = Camera.main.ScreenPointToRay(inputPos);
 
-        if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, enemyLayer)) { return; }
+        if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, touchLayer)) { return; }
+        if (hit.transform.gameObject.layer == 9)
+        {
+            if (shootAmount == 0) { return; }
+            Enemy enemy = hit.transform.gameObject.GetComponent<Enemy>();
+            if (enemy == null) return;
 
-        Enemy enemy = hit.transform.gameObject.GetComponent<Enemy>();
-        if (enemy == null) return;
+            GameObject VFX = Instantiate(superShootVFX, hit.transform.position, Quaternion.identity);
+            Destroy(VFX, 1f);
+            enemy.GetDemage(superShotPower);
+            shootAmount--;
+            currentTime = 0f;
+        }
+        else if (hit.transform.gameObject.layer == 11)
+        {
+            tryBuildTurret(hit.transform.gameObject);
+        }
+    }
 
-        GameObject VFX = Instantiate(superShootVFX, hit.transform.position, Quaternion.identity);
-        Destroy(VFX, 1f);
-        enemy.GetDemage(superShotPower);
-        shootAmount--;
-        currentTime = 0f;
+    void tryBuildTurret(GameObject turretCell)
+    {
+        if (turretCell.GetComponent<CellTurret>() == null) { return; }
+        if (turretCell.GetComponent<CellTurret>().turretOnPlace != null) { return; }
+        Vector3 turretPosition = turretCell.transform.position;
+        turretPosition.y += 0.6f;
+        GameObject turret = GameManager.instance.getUnitToCreat(0,0);
+        turretCell.GetComponent<CellTurret>().turretOnPlace = Instantiate(turret, turretPosition, Quaternion.identity);
     }
 }
