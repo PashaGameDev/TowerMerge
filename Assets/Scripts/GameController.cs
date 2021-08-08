@@ -118,7 +118,7 @@ public class GameController : MonoBehaviour
             choosenUnit.transform.position = new Vector3(hit.point.x, choosenUnit.transform.position.y, hit.point.z);
         }
 
-        if (hit.collider.TryGetComponent<MyUnit>(out MyUnit myUnit))
+        if (hit.collider.TryGetComponent<MyUnit>(out MyUnit myUnit) )
         {
             SetChoosenUnit(hit.collider.gameObject);
         }

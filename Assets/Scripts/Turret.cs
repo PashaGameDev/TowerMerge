@@ -12,6 +12,8 @@ public class Turret : Unit
     public static event Action<GameObject> turretDie;
     public static event Action<GameObject> turretCreated;
 
+    public CellTurret cell;
+
     private void Start()
     {
         turretCreated?.Invoke(gameObject);
@@ -66,6 +68,10 @@ public class Turret : Unit
     private void OnDestroy()
     {
         turretDie?.Invoke(gameObject);
+        if (cell != null)
+        {
+            cell.GetComponent<CellTurret>().turretOnPlace = null;
+        }
     }
 
 

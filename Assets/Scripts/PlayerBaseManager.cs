@@ -108,6 +108,7 @@ public class PlayerBaseManager : MonoBehaviour
         Vector3 turretPosition = turretCell.transform.position;
         turretPosition.y += 0.6f;
         GameObject turret = GameManager.instance.getUnitToCreat(0,0);
+        turret.GetComponent<Turret>().cell = turretCell.GetComponent<CellTurret>();
         turretCell.GetComponent<CellTurret>().turretOnPlace = Instantiate(turret, turretPosition, Quaternion.identity);
     }
 }
