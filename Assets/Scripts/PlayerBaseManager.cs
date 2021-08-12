@@ -6,11 +6,17 @@ using UnityEngine.InputSystem;
 
 public class PlayerBaseManager : MonoBehaviour
 {
+    [SerializeField] private int extraErning = 30;
     [SerializeField] private float countDown = 5f;
     [SerializeField] private int superShotPower = 100;
     [SerializeField] private Image superShotImage = null;
     [SerializeField] private LayerMask touchLayer = new LayerMask();
     [SerializeField] private GameObject superShootVFX = null;
+    [SerializeField] private GameObject superShotIcon = null;
+
+    [SerializeField] private LineRenderer liser;
+    private Vector3 liserStartPosition;
+
 
     private float currentTime = 0f;
     private int shootAmount = 0;
@@ -33,9 +39,14 @@ public class PlayerBaseManager : MonoBehaviour
         if (currentTime >= countDown)
         {
             shootAmount = 1;
+           // superShotIcon.SetActive(true);
         }
         else
         {
+            // superShotIcon.SetActive(false);
+            liser.SetPosition(0, Vector3.zero);
+            liser.SetPosition(1, Vector3.zero);
+
             currentTime += Time.deltaTime;
             float fillAmount = currentTime / countDown;
             superShotImage.fillAmount = fillAmount;
@@ -91,6 +102,12 @@ public class PlayerBaseManager : MonoBehaviour
 
             GameObject VFX = Instantiate(superShootVFX, hit.transform.position, Quaternion.identity);
             Destroy(VFX, 1f);
+
+            if ((enemy.GetComponent<Enemy>().getHelth() - superShotPower) <= 0) { GameManager.instance.IncreaseBalance(extraErning); }
+
+            liser.SetPosition(0, gameObject.transform.position);
+            liser.SetPosition(1, enemy.transform.position);
+
             enemy.GetDemage(superShotPower);
             shootAmount--;
             currentTime = 0f;
@@ -105,9 +122,12 @@ public class PlayerBaseManager : MonoBehaviour
     {
         if (turretCell.GetComponent<CellTurret>() == null) { return; }
         if (turretCell.GetComponent<CellTurret>().turretOnPlace != null) { return; }
+
         Vector3 turretPosition = turretCell.transform.position;
         turretPosition.y += 0.6f;
+
         GameObject turret = GameManager.instance.getUnitToCreat(0,0);
+
         turret.GetComponent<Turret>().cell = turretCell.GetComponent<CellTurret>();
         turretCell.GetComponent<CellTurret>().turretOnPlace = Instantiate(turret, turretPosition, Quaternion.identity);
     }

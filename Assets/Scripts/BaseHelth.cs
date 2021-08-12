@@ -8,6 +8,7 @@ public class BaseHelth : MonoBehaviour
     [SerializeField] int maxHelth = 100;
     private int helth = 100;
     [SerializeField] Helth helthView = null;
+   
     public static event Action<string> baseDistroyed;
 
     private void Start()

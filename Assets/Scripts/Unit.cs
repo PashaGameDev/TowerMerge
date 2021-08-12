@@ -31,6 +31,10 @@ public class Unit : MonoBehaviour
     private List<GameObject> targetList = new List<GameObject>();
     private GameObject enemyBase;
 
+    public int getHelth()
+    {
+        return helth;
+    }
     public void SetEnemyBase()
     {
         helth = maxHelth;

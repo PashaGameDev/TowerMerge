@@ -117,6 +117,12 @@ public class GameManager : MonoBehaviour
         balanceText.text = currentBalance.ToString();
     }
 
+    public void IncreaseBalance(int amount)
+    {
+        currentBalance += amount;
+        balanceText.text = currentBalance.ToString();
+    }
+
     public void OnDestroy()
     {
         EnemyBase.CreatedEnemy -= AddEnemy;
@@ -137,9 +143,7 @@ public class GameManager : MonoBehaviour
         killedEnemy++;
 
         if(enemy.GetComponent<Enemy>() != null)
-        currentBalance += enemy.GetComponent<Enemy>().price;
-
-        balanceText.text = currentBalance.ToString();
+        IncreaseBalance(enemy.GetComponent<Enemy>().price);
 
         AllEnemies.Remove(enemy);
     }
