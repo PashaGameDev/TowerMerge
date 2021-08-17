@@ -27,6 +27,7 @@ public class Turret : Unit
         if (newTarget == null)
         {
             FindNewTarget();
+            TurnOnOfShootVFX(false);
         }
         else
         {
@@ -54,6 +55,7 @@ public class Turret : Unit
         {
             chaseTimer = 0;
             newTarget = null;
+            
             return;
         }
 
@@ -61,6 +63,7 @@ public class Turret : Unit
         if (chaseTimer <= 0)
         {
             newTarget.GetComponent<Unit>().GetDemage(demage);
+            TurnOnOfShootVFX(true);
             chaseTimer = chasingRate; 
         }
         else
@@ -76,6 +79,12 @@ public class Turret : Unit
             cell.GetComponent<CellTurret>().SetState(false);
             cell.GetComponent<CellTurret>().turretOnPlace = null;
         }
+    }
+
+    private void TurnOnOfShootVFX(bool state)
+    {
+        if (shootVFX == null) { return; } 
+        shootVFX.SetActive(state);
     }
 
 
