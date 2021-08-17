@@ -118,10 +118,15 @@ public class PlayerBaseManager : MonoBehaviour
         if (turretCell.GetComponent<CellTurret>() == null) { return; }
         if (turretCell.GetComponent<CellTurret>().turretOnPlace != null) { return; }
 
+        GameObject turret = GameManager.instance.getUnitToCreat(0, 0);
+
+        if (turret.GetComponent<Turret>().price > GameManager.instance.currentBalance)
+        { return; }
+
+        GameManager.instance.decreaseBalace(turret.GetComponent<Turret>().price);
+
         Vector3 turretPosition = turretCell.transform.position;
         turretPosition.y += 0.6f;
-
-        GameObject turret = GameManager.instance.getUnitToCreat(0,0);
 
         turret.GetComponent<Turret>().cell = turretCell.GetComponent<CellTurret>();
         turretCell.GetComponent<CellTurret>().turretOnPlace = Instantiate(turret, turretPosition, Quaternion.identity);

@@ -13,6 +13,8 @@ public class Turret : Unit
     public static event Action<GameObject> turretDie;
     public static event Action<GameObject> turretCreated;
 
+
+    public int price = 15;
     public CellTurret cell;
 
     private void Start()
