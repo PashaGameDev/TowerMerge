@@ -89,6 +89,9 @@ public class TurretManager : MonoBehaviour
             GameObject newUnit = Instantiate(prefabToInstaniate, intersectedObject.transform.position, Quaternion.identity);
 
             newUnit.GetComponent<Turret>().cell =  intersectedObject.GetComponent<Turret>().cell;
+            newUnit.GetComponent<Turret>().cell.GetComponent<CellTurret>().turretOnPlace = newUnit;
+            intersectedObject.GetComponent<Turret>().cell = null;
+
             chousenTurret.GetComponent<Turret>().cell.GetComponent<CellTurret>().turretOnPlace = null;
 
             Destroy(chousenTurret);
@@ -132,7 +135,7 @@ public class TurretManager : MonoBehaviour
 
     void CleanChoosenUnit()
     {
-        if (chousenTurret != null) { chousenTurret.transform.position = startTurretPosition; }
+        if (chousenTurret != null) { chousenTurret.transform.position = startTurretPosition; chousenTurret.layer = 10; }
 
         chousenTurret = null;
         intersectedObject = null;

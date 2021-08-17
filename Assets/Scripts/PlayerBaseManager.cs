@@ -13,6 +13,7 @@ public class PlayerBaseManager : MonoBehaviour
     [SerializeField] private LayerMask touchLayer = new LayerMask();
     [SerializeField] private GameObject superShootVFX = null;
     [SerializeField] private GameObject superShotIcon = null;
+    [SerializeField] private Transform partToRotate = null;
 
     [SerializeField] private LineRenderer liser;
     private Vector3 liserStartPosition;
@@ -73,22 +74,14 @@ public class PlayerBaseManager : MonoBehaviour
                     break;
 
                 case UnityEngine.TouchPhase.Moved:
-                    
-
                     break;
 
                 case UnityEngine.TouchPhase.Ended:
-                    
-
                     break;
             }
         }
-
 #endif
     }
-
-  
-
     void SuperShotAction(Vector3 inputPos)
     {
         Ray ray = Camera.main.ScreenPointToRay(inputPos);
@@ -108,6 +101,8 @@ public class PlayerBaseManager : MonoBehaviour
             liser.SetPosition(0, gameObject.transform.position);
             liser.SetPosition(1, enemy.transform.position);
 
+            // LookAtTarget(enemy.transform);
+            partToRotate.LookAt(enemy.transform);
             enemy.GetDemage(superShotPower);
             shootAmount--;
             currentTime = 0f;
@@ -130,5 +125,16 @@ public class PlayerBaseManager : MonoBehaviour
 
         turret.GetComponent<Turret>().cell = turretCell.GetComponent<CellTurret>();
         turretCell.GetComponent<CellTurret>().turretOnPlace = Instantiate(turret, turretPosition, Quaternion.identity);
+        turretCell.GetComponent<CellTurret>().SetState(true);
     }
+
+    void LookAtTarget(Transform targetPoit)
+    {
+            if (partToRotate == null) { partToRotate = transform; }
+            Vector3 dir = targetPoit.position - transform.position;
+            Quaternion lookRotation = Quaternion.LookRotation(dir);
+            Vector3 rotation = Quaternion.Lerp(partToRotate.rotation, lookRotation, Time.deltaTime * (10 * 2.75f)).eulerAngles;
+            partToRotate.rotation = Quaternion.Euler(0f, rotation.y, 0f);   
+    }
+
 }

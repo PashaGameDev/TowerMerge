@@ -86,7 +86,7 @@ public class Unit : MonoBehaviour
         if (Vector3.Distance(transform.position, targetPoit.position) <= offset) { GetNextPoint(); return; }
         if (shootVFX != null) { shootVFX.SetActive(false); }
         Vector3 dir = targetPoit.position - transform.position;
-        RotateToTarget(dir);
+        RotateToTarget(dir, transform);
         dir = new Vector3(dir.x, dir.y, dir.z);
         SwitchAnimation("isMove", true);
         SwitchAnimation("isShoot", false);
@@ -154,7 +154,7 @@ public class Unit : MonoBehaviour
             {
                 target = enemy;
                 Vector3 dir = target.transform.position - transform.position;
-                RotateToTarget(dir);
+                RotateToTarget(dir, transform);
                 SwitchAnimation("isShoot", true);
                 break;
             }
@@ -197,11 +197,12 @@ public class Unit : MonoBehaviour
         
     }
 
-    public void RotateToTarget(Vector3 dir)
+    public void RotateToTarget(Vector3 dir, Transform partToRotate)
     {
+        if (partToRotate == null) { partToRotate = transform; }
         Quaternion lookRotation = Quaternion.LookRotation(dir);
-        Vector3 rotation = Quaternion.Lerp(transform.rotation, lookRotation, Time.deltaTime * (speed * 2.75f)).eulerAngles;
-        transform.rotation = Quaternion.Euler(0f, rotation.y, 0f);
+        Vector3 rotation = Quaternion.Lerp(partToRotate.rotation, lookRotation, Time.deltaTime * (speed * 2.75f)).eulerAngles;
+        partToRotate.rotation = Quaternion.Euler(0f, rotation.y, 0f);
     }
 
     public void SwitchAnimation(string animTag, bool state)

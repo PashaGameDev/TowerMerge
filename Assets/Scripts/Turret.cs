@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class Turret : Unit
 {
-   
+    [SerializeField] private Transform partToRotate = null;
+         
     private GameObject newTarget = null;
     private float chaseTimer = 0;
 
@@ -17,6 +18,7 @@ public class Turret : Unit
     private void Start()
     {
         turretCreated?.Invoke(gameObject);
+        gameObject.layer = 10;
     }
 
     
@@ -54,7 +56,8 @@ public class Turret : Unit
             newTarget = null;
             return;
         }
-        RotateToTarget(newTarget.transform.position - transform.position);
+
+        RotateToTarget(newTarget.transform.position - transform.position, partToRotate);
         if (chaseTimer <= 0)
         {
             newTarget.GetComponent<Unit>().GetDemage(demage);
@@ -70,6 +73,7 @@ public class Turret : Unit
         turretDie?.Invoke(gameObject);
         if (cell != null)
         {
+            cell.GetComponent<CellTurret>().SetState(false);
             cell.GetComponent<CellTurret>().turretOnPlace = null;
         }
     }

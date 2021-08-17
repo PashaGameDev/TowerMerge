@@ -11,6 +11,7 @@ public class GameController : MonoBehaviour
 
     private GameObject choosenUnit = null;
     private GameObject intersectedObject = null;
+
     private Vector3 startPositionChoosenUnit =  Vector3.zero;
     private Vector3 startMousPosition;
     private Vector3 lastMousePosition; 
@@ -134,6 +135,7 @@ public class GameController : MonoBehaviour
         if (choosenUnit != null) { intersectedObject = t; return; }
         choosenUnit = t;
         choosenUnit.layer = 8;
+      
         startPositionChoosenUnit = choosenUnit.transform.position;
     }
 }
