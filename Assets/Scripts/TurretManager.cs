@@ -34,7 +34,7 @@ public class TurretManager : MonoBehaviour
            // if (choosenUnit != null) { choosenUnit.layer = 6; }
             Merge();
         }
-#else
+#else 
 
         if (Input.touchCount > 0)
         {
@@ -43,7 +43,7 @@ public class TurretManager : MonoBehaviour
             switch (touch.phase)
             {
                 case UnityEngine.TouchPhase.Began:
-                    startMousPosition = touch.position;
+                    startMousePosition = touch.position;
                     CheckTouchedObject(touch.position);
                     break;
 
@@ -54,13 +54,12 @@ public class TurretManager : MonoBehaviour
 
                 case UnityEngine.TouchPhase.Ended:
                     lastMousePosition = touch.position;
-                    if (choosenUnit != null) { choosenUnit.layer = 6; }
+                    if (chousenTurret != null) { chousenTurret.layer = 10; }
                     Merge();
 
                     break;
             }
         }
-
 #endif
     }
 

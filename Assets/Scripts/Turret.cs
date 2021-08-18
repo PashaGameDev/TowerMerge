@@ -6,6 +6,7 @@ using UnityEngine;
 public class Turret : Unit
 {
     [SerializeField] private Transform partToRotate = null;
+    [SerializeField] private GameObject dieVFXPrefab = null; 
          
     private GameObject newTarget = null;
     private float chaseTimer = 0;
@@ -80,6 +81,13 @@ public class Turret : Unit
         {
             cell.GetComponent<CellTurret>().SetState(false);
             cell.GetComponent<CellTurret>().turretOnPlace = null;
+        }
+
+        int currentHelth = getHelth();
+        if (currentHelth <= 0 && dieVFXPrefab != null)
+        {
+            GameObject dieVFX = Instantiate(dieVFXPrefab, transform.position, Quaternion.identity);
+            Destroy(dieVFX, 2f);
         }
     }
 

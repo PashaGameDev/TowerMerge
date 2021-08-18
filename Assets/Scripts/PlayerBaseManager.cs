@@ -25,7 +25,8 @@ public class PlayerBaseManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        liser.SetPosition(0, Vector3.zero);
+        liser.SetPosition(1, Vector3.zero);
     }
 
     // Update is called once per frame
@@ -45,13 +46,19 @@ public class PlayerBaseManager : MonoBehaviour
         else
         {
             // superShotIcon.SetActive(false);
-            liser.SetPosition(0, Vector3.zero);
-            liser.SetPosition(1, Vector3.zero);
-
             currentTime += Time.deltaTime;
             float fillAmount = currentTime / countDown;
             superShotImage.fillAmount = fillAmount;
         }
+    }
+
+    IEnumerator cleanLaser(float t)
+    {
+        yield return new WaitForSeconds(t);
+
+        liser.SetPosition(0, Vector3.zero);
+        liser.SetPosition(1, Vector3.zero);
+
     }
 
     void SuperShot()
@@ -70,13 +77,14 @@ public class PlayerBaseManager : MonoBehaviour
             switch (touch.phase)
             {
                 case UnityEngine.TouchPhase.Began:
-                     SuperShotAction(touch.position);
+                    
                     break;
 
                 case UnityEngine.TouchPhase.Moved:
                     break;
 
                 case UnityEngine.TouchPhase.Ended:
+                 SuperShotAction(touch.position);
                     break;
             }
         }
@@ -94,14 +102,15 @@ public class PlayerBaseManager : MonoBehaviour
             if (enemy == null) return;
 
             GameObject VFX = Instantiate(superShootVFX, hit.transform.position, Quaternion.identity);
-            Destroy(VFX, 1f);
+            Destroy(VFX, 2f);
 
             if ((enemy.GetComponent<Enemy>().getHelth() - superShotPower) <= 0) { GameManager.instance.IncreaseBalance(extraErning); }
 
             liser.SetPosition(0, gameObject.transform.position);
             liser.SetPosition(1, enemy.transform.position);
 
-            // LookAtTarget(enemy.transform);
+            StartCoroutine(cleanLaser(0.7f));
+           
             partToRotate.LookAt(enemy.transform);
             enemy.GetDemage(superShotPower);
             shootAmount--;
