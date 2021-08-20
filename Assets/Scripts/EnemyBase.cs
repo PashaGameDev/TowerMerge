@@ -8,7 +8,7 @@ public class EnemyBase : MonoBehaviour
 {
     [SerializeField] GameObject [] enemyPrefab;
     [SerializeField] Transform enemySpawnPoint;
-    [SerializeField] float timeRate = 2f;
+    [SerializeField] float timeRate = 1f;
 
     [SerializeField] private Text countDownText;
     [SerializeField] private float timerCountDown = 3f;
@@ -19,6 +19,15 @@ public class EnemyBase : MonoBehaviour
 
     private float t = 0f;
     private int spawnedEnemiesInWave = 0;
+   
+
+
+    int waveNum = 1;
+    int spawnedEnemiesTotal = 0;
+    int type1inWave = 0;
+    int type2inWave = 0;
+    int type3inWave = 0;
+    
     
     void Update()
     {
@@ -37,7 +46,8 @@ public class EnemyBase : MonoBehaviour
         if (GameManager.instance.AllEnemies.Count > 5) { return; }
         if (t <= 0)
         {
-            CreatEnemy();
+            SpawnWaves();
+            // CreatEnemy();
             t = timeRate;
         }
         else
@@ -45,10 +55,11 @@ public class EnemyBase : MonoBehaviour
             t -= Time.deltaTime;
         }
     }
-    void CreatEnemy()
+    void CreatEnemy(int typeEnemy)
     {
         //if (GameManager.instance.AllEnemies.Count >= 2) { return; }
-       GameObject enemy = Instantiate(SetEnemyToBuild(), enemySpawnPoint.position, Quaternion.identity);
+        // GameObject enemy = Instantiate(SetEnemyToBuild(), enemySpawnPoint.position, Quaternion.identity);
+        GameObject enemy = Instantiate(enemyPrefab[typeEnemy], enemySpawnPoint.position, Quaternion.identity);
         CreatedEnemy?.Invoke(enemy);
         spawnedEnemiesInWave++;
     }
@@ -72,5 +83,49 @@ public class EnemyBase : MonoBehaviour
 
         return enemyToBuild;
     }
-    
+
+    void SpawnWaves()
+    {
+        if (spawnedEnemiesTotal <= 5)
+        {
+            spawnedEnemiesTotal++;
+            CreatEnemy(0);
+        }
+        else if (spawnedEnemiesTotal > 5 && spawnedEnemiesTotal <= 10)
+        {
+            if (type1inWave < 3)
+            { CreatEnemy(0); type1inWave++; }
+            else { CreatEnemy(1); type2inWave++; }
+
+            if (type2inWave > 2)
+            { type2inWave = 0; type1inWave = 0; }
+
+            spawnedEnemiesTotal++;
+        }
+        else if (spawnedEnemiesTotal > 10)
+        {
+            if (type1inWave <= 3)
+            {
+                CreatEnemy(0);
+                type1inWave++;
+            }
+            else if (type2inWave <= 3)
+            {
+                CreatEnemy(1);
+                type2inWave++;
+            }
+            else if (type3inWave <= 3)
+            {
+                CreatEnemy(2);
+                type3inWave++;
+            }
+            else
+            {
+                type1inWave = 0;
+                type2inWave = 0;
+                type3inWave = 0;
+            }
+        }
+
+    }
 }
