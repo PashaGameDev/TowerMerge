@@ -64,6 +64,11 @@ public class Unit : MonoBehaviour
         helth -= demageAmount;
         if(helthView != null)
         helthView.dispalyHelth(maxHelth, helth);
+
+        if (helth <= GameManager.instance.superShotPower)
+        {
+            helthView.TargetHighLigt();
+        }
        
         if (helth <= 0)
         {

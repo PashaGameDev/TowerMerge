@@ -9,7 +9,21 @@ public class Helth : MonoBehaviour
     [SerializeField] private GameObject helthCanvas;
     [SerializeField] private GameObject minusLifeText;
     [SerializeField] private GameObject canvas;
+    [SerializeField] private GameObject targetHighLight;
 
+
+    public void TargetHighLigt()
+    {
+        if (targetHighLight == null)
+        { return; }
+
+        int helth = gameObject.GetComponent<Unit>().getHelth();
+
+        if (GameManager.instance.superShotPower < helth || GameManager.instance.GetSuperShotAmount() <= 0)
+        { targetHighLight.SetActive(false); return; }
+
+        targetHighLight.SetActive(true);
+    }
     
     public void dispalyHelth(int maxHlth, int currentHelth)
     {

@@ -1,0 +1,59 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class textColorChanger : MonoBehaviour
+{
+    [SerializeField] private int UnitIndex;
+
+    private int unitPrice;
+    Text priceText; 
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (GameManager.instance.unitsArrayType1[UnitIndex] != null && priceText == null)
+        {
+            instParameters();
+        }
+
+        if (GameManager.instance.currentBalance >= unitPrice)
+        {
+            priceText.color = Color.white;
+        }
+        else
+        {
+            priceText.color = Color.red;
+        }
+    }
+
+    void instParameters()
+    {
+        switch (UnitIndex)
+        {
+            case 0:
+                unitPrice = GameManager.instance.unitsArrayType1[0].GetComponent<MyUnit>().price;
+                break;
+
+            case 1:
+                unitPrice = GameManager.instance.unitsArrayType2[0].GetComponent<MyUnit>().price;
+                break;
+
+            case 2:
+                unitPrice = GameManager.instance.unitsArrayType3[0].GetComponent<MyUnit>().price;
+                break;
+
+            default:
+                break;
+        }
+       
+        priceText = gameObject.GetComponent<Text>();
+        priceText.text = unitPrice.ToString();
+    }
+}

@@ -8,7 +8,7 @@ public class PlayerBaseManager : MonoBehaviour
 {
     [SerializeField] private int extraErning = 30;
     [SerializeField] private float countDown = 5f;
-    [SerializeField] private int superShotPower = 100;
+
     [SerializeField] private Image superShotImage = null;
     [SerializeField] private LayerMask touchLayer = new LayerMask();
     [SerializeField] private GameObject superShootVFX = null;
@@ -18,7 +18,7 @@ public class PlayerBaseManager : MonoBehaviour
     [SerializeField] private LineRenderer liser;
     private Vector3 liserStartPosition;
 
-
+    private int superShotPower = 0;
     private float currentTime = 0f;
     private int shootAmount = 0;
     
@@ -27,6 +27,9 @@ public class PlayerBaseManager : MonoBehaviour
     {
         liser.SetPosition(0, Vector3.zero);
         liser.SetPosition(1, Vector3.zero);
+
+        superShotPower = GameManager.instance.superShotPower;
+  
     }
 
     // Update is called once per frame
@@ -37,15 +40,16 @@ public class PlayerBaseManager : MonoBehaviour
     }
 
     void SuperShotCountDown()
-    {
+    { 
         if (currentTime >= countDown)
         {
-            shootAmount = 1;
-           // superShotIcon.SetActive(true);
+            // shootAmount = 1;
+            GameManager.instance.SetSuperShotAmount(1);
+            shootAmount = GameManager.instance.GetSuperShotAmount();
+            CheckEnemyHighLights();
         }
         else
         {
-            // superShotIcon.SetActive(false);
             currentTime += Time.deltaTime;
             float fillAmount = currentTime / countDown;
             superShotImage.fillAmount = fillAmount;
@@ -114,6 +118,8 @@ public class PlayerBaseManager : MonoBehaviour
             partToRotate.LookAt(enemy.transform);
             enemy.GetDemage(superShotPower);
             shootAmount--;
+            GameManager.instance.SetSuperShotAmount(shootAmount);
+            CheckEnemyHighLights();
             currentTime = 0f;
         }
         else if (hit.transform.gameObject.layer == 11)
@@ -150,5 +156,13 @@ public class PlayerBaseManager : MonoBehaviour
             Vector3 rotation = Quaternion.Lerp(partToRotate.rotation, lookRotation, Time.deltaTime * (10 * 2.75f)).eulerAngles;
             partToRotate.rotation = Quaternion.Euler(0f, rotation.y, 0f);   
     }
+
+    void CheckEnemyHighLights()
+    {
+        foreach (var enemy in GameManager.instance.AllEnemies)
+        {
+            enemy.GetComponent<Helth>().TargetHighLigt();
+        }
+    }    
 
 }

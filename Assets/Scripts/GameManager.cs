@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    public int superShotPower = 30;
     public int currentBalance = 100;
     public Text balanceText;
     public static GameManager instance = null;
@@ -13,8 +14,8 @@ public class GameManager : MonoBehaviour
     public GameObject[] unitsArrayType1 = null;
     public GameObject[] unitsArrayType2 = null;
     public GameObject[] unitsArrayType3 = null;
-
     public GameObject[] turretsArray = null;
+    public GameObject gameOverPanel = null;
 
     public Image[] unitIconCountDown; 
     public GameObject getUnitToCreat(int unitType, int index)
@@ -44,6 +45,17 @@ public class GameManager : MonoBehaviour
 
     private int killedEnemy = 0;
     private float buildCountDown = 1f;
+    private int superShotAmount = 0;
+
+    public int GetSuperShotAmount()
+    {
+        return superShotAmount;
+    }
+
+    public void SetSuperShotAmount(int amount)
+    {
+        superShotAmount = amount;
+    }
 
     public int GetKilledAmount()
     {
@@ -168,18 +180,6 @@ public class GameManager : MonoBehaviour
         AllUnits.Remove(turret);
     }
 
-
-    public void GameOver(string result)
-    {
-        if (result == "Win")
-        {
-            Debug.Log("Won");
-        }
-        else
-        {
-            Debug.Log("Lose");
-        }
-    }
     public void StartCountDownBuilUnit(int btnIndex)
     {
         StartCoroutine(buildUnitCountDown(0.1f,btnIndex));
@@ -200,4 +200,10 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void GameOver(string result)
+    {
+        Time.timeScale = 0.1f;
+        gameOverPanel.SetActive(true);
+        gameOverPanel.GetComponent<GameOver>().resultTest.text = "You " + result + "!!!";
+    }
 }
