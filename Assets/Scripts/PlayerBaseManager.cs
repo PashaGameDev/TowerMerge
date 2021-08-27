@@ -28,7 +28,7 @@ public class PlayerBaseManager : MonoBehaviour
         liser.SetPosition(0, Vector3.zero);
         liser.SetPosition(1, Vector3.zero);
 
-        superShotPower = GameManager.instance.superShotPower;
+        
   
     }
 
@@ -43,6 +43,7 @@ public class PlayerBaseManager : MonoBehaviour
     { 
         if (currentTime >= countDown)
         {
+            superShotPower = GameManager.instance.superShotPower;
             // shootAmount = 1;
             GameManager.instance.SetSuperShotAmount(1);
             shootAmount = GameManager.instance.GetSuperShotAmount();
