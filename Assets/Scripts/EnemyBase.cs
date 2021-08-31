@@ -6,30 +6,111 @@ using UnityEngine.UI;
 
 public class EnemyBase : MonoBehaviour
 {
-    [SerializeField] GameObject [] enemyPrefab;
+    [SerializeField] GameObject[] enemyPrefabs;
+    [SerializeField] float timeForThinking = 1.0f;
+    [SerializeField] int defaultErningAmount = 5; 
+    private List<EnemyCellManager> allCells = new List<EnemyCellManager>();
+  
     [SerializeField] GameObject enemyTurretPrefab;
     [SerializeField] GameObject[] enemyTurretCells; 
-    [SerializeField] Transform enemySpawnPoint;
-
-    [SerializeField] float timeRate = 1f;
 
     [SerializeField] private Text countDownText;
     [SerializeField] private float timerCountDown = 3f;
-
+   
     public static event Action<GameObject> CreatedEnemy;
 
-    private float t = 0f;
-    private int spawnedEnemiesInWave = 0;
-   
+    IEnumerator DefaultErning()
+    {
+        yield return new WaitForSeconds(2.0f);
+        GameManager.instance.IncreaseBalance(defaultErningAmount);
+        GameManager.instance.IncreaseEnemyBalance(defaultErningAmount);
 
+        StartCoroutine(DefaultErning());
+    }
+    IEnumerator MakeDecision()
+    {
+        yield return new WaitForSeconds(timeForThinking);
+        
+        int actionIndex = UnityEngine.Random.Range(1,3);
+       
+        switch (actionIndex)
+        {
+            case 1:
+                BuildUnit();
+                break;
+            case 2:
+               // BuildUnit();
+                  SendEnemyFight();
+                TryBuildTurrets();
+                break;
+            case 3:
+                TryBuildTurrets();
+                break;
+            default:
+                break;
+        }
 
-    int waveNum = 1;
-    int spawnedEnemiesTotal = 0;
-    int type1inWave = 0;
-    int type2inWave = 0;
-    int type3inWave = 0;
-    
-    
+        StartCoroutine(MakeDecision());
+    }
+
+    void BuildUnit()
+    {
+        GameObject enemyToBuild = enemyPrefabs[UnityEngine.Random.Range(0, enemyPrefabs.Length - 1 )];
+         
+        if (GameManager.instance.enemyBalance >= enemyToBuild.GetComponent<Enemy>().price)
+        {
+            int countCells = 0;
+            foreach (var cell in allCells)
+            {
+                countCells++;
+                if (cell.GetUnitOnPlace() == null)
+                {
+                    GameObject enemy = Instantiate(enemyToBuild, cell.gameObject.transform.position, Quaternion.identity);
+                    cell.SetuUnitOnPlace(enemy);
+                    enemy.GetComponent<Enemy>().cell = cell;
+                    GameManager.instance.DecreaseEnemyBalace(enemyToBuild.GetComponent<Enemy>().price);
+                    CreatedEnemy?.Invoke(enemy);
+                    break;
+                }
+                if (countCells == allCells.Count) { SendEnemyFight(); }
+            } 
+        }
+    }
+
+    void SendEnemyFight()
+    {
+        foreach (var enemy in GameManager.instance.AllEnemies)
+        {
+            if (enemy == null) { return; }
+            if (enemy.GetComponent<Enemy>() != null
+                && !enemy.GetComponent<Enemy>().isCanMove
+                && enemy.GetComponent<Enemy>().isOnBase)
+            {
+                enemy.GetComponent<Enemy>().isCanMove = true;
+                enemy.GetComponent<Enemy>().isOnBase = false;
+                enemy.GetComponent<Enemy>().cell.SetuUnitOnPlace(null);
+                break;
+            }
+        }
+    }
+    void Merge()
+    {
+        Debug.Log("Merge");
+    }
+
+    private void Start()
+    {
+        
+            var Cells = GameObject.FindObjectsOfType<EnemyCellManager>();
+            foreach (var cell in Cells)
+            {
+                allCells.Add(cell);
+            }
+        
+        StartCoroutine(MakeDecision());
+        StartCoroutine(DefaultErning());
+    }
+
     void Update()
     {
         if (timerCountDown > 0)
@@ -44,50 +125,7 @@ public class EnemyBase : MonoBehaviour
             countDownText.gameObject.SetActive(false);
         }
 
-        if (GameManager.instance.AllEnemies.Count > 5) { return; }
-        if (t <= 0)
-        {
-            SpawnWaves();
-            
-            t = timeRate;
-        }
-        else
-        {
-            t -= Time.deltaTime;
-        }
-
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            TryBuildTurrets();
-        }
-    }
-    void CreatEnemy(int typeEnemy)
-    {
-        //if (GameManager.instance.AllEnemies.Count >= 2) { return; }
-        // GameObject enemy = Instantiate(SetEnemyToBuild(), enemySpawnPoint.position, Quaternion.identity);
-        GameObject enemy = Instantiate(enemyPrefab[typeEnemy], enemySpawnPoint.position, Quaternion.identity);
-        CreatedEnemy?.Invoke(enemy);
-        spawnedEnemiesInWave++;
-    }
-
-    GameObject SetEnemyToBuild()
-    {
-        int index = 0;
-
-        if (spawnedEnemiesInWave == 3)
-        {
-            index = 1;
-        }
-        else if (spawnedEnemiesInWave > 3)
-        {
-            index = 2;
-        }
-
-        if (spawnedEnemiesInWave >= 5)
-            spawnedEnemiesInWave = 0;
-        GameObject enemyToBuild = enemyPrefab[index];
-
-        return enemyToBuild;
+       
     }
 
     void TryBuildTurrets()
@@ -109,49 +147,5 @@ public class EnemyBase : MonoBehaviour
         cellToBuild.GetComponent<CellTurret>().turretOnPlace = turret;
     }
 
-    void SpawnWaves()
-    {
-        if (spawnedEnemiesTotal <= 5)
-        {
-            spawnedEnemiesTotal++;
-            CreatEnemy(0);
-        }
-        else if (spawnedEnemiesTotal > 5 && spawnedEnemiesTotal <= 10)
-        {
-            if (type1inWave < 3)
-            { CreatEnemy(0); type1inWave++; }
-            else { CreatEnemy(1); type2inWave++; }
-
-            if (type2inWave > 2)
-            { type2inWave = 0; type1inWave = 0; }
-
-            spawnedEnemiesTotal++;
-        }
-        else if (spawnedEnemiesTotal > 10)
-        {
-            if (type1inWave <= 3)
-            {
-                CreatEnemy(0);
-                TryBuildTurrets();
-                type1inWave++;
-            }
-            else if (type2inWave <= 3)
-            {
-                CreatEnemy(1);
-                type2inWave++;
-            }
-            else if (type3inWave <= 3)
-            {
-                CreatEnemy(2);
-                type3inWave++;
-            }
-            else
-            {
-                type1inWave = 0;
-                type2inWave = 0;
-                type3inWave = 0;
-            }
-        }
-
-    }
+   
 }

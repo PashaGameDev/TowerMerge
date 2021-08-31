@@ -7,9 +7,11 @@ public class GameManager : MonoBehaviour
 {
     public int superShotPower = 30;
     public int currentBalance = 100;
+    public int enemyBalance = 60; 
     public Text balanceText;
     public static GameManager instance = null;
     private List<CellManager> cells = new List<CellManager>();
+    
 
     public GameObject[] unitsArrayType1 = null;
     public GameObject[] unitsArrayType2 = null;
@@ -46,6 +48,16 @@ public class GameManager : MonoBehaviour
     private int killedEnemy = 0;
     private float buildCountDown = 1f;
     private int superShotAmount = 0;
+
+    public void DecreaseEnemyBalace(int amount)
+    {
+        enemyBalance -= amount;
+    }
+
+    public void IncreaseEnemyBalance(int amount)
+    {
+        enemyBalance += amount;
+    }
 
     public int GetSuperShotAmount()
     {
@@ -170,6 +182,8 @@ public class GameManager : MonoBehaviour
 
     public void removeUnit(GameObject unit)
     {
+        if (unit.GetComponent<Unit>() != null) { IncreaseEnemyBalance(unit.GetComponent<MyUnit>().price); }
+        
         AllUnits.Remove(unit);
     }
 

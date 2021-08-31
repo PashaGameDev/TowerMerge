@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CellManager : MonoBehaviour
+public class EnemyCellManager : MonoBehaviour
 {
     private GameObject unitOnPlace = null;
 
@@ -15,6 +15,4 @@ public class CellManager : MonoBehaviour
     {
         unitOnPlace = obj;
     }
-
-    
 }
