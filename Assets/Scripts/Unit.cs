@@ -190,7 +190,7 @@ public class Unit : MonoBehaviour
     {
         
         if (shootVFX != null) { shootVFX.SetActive(false); }
-        if (isUnit)
+        if (isUnit && gameObject.GetComponent<Rigidbody>() != null )
         {
             gameObject.GetComponent<Rigidbody>().useGravity = false;
             SwitchAnimation("isDied", true);

@@ -13,11 +13,13 @@ public class PlayerBaseManager : MonoBehaviour
     [SerializeField] private LayerMask touchLayer = new LayerMask();
     [SerializeField] private GameObject superShootVFX = null;
     [SerializeField] private GameObject superShotIcon = null;
+    [SerializeField] private GameObject preShotVFX = null;
     [SerializeField] private Transform partToRotate = null;
 
     [SerializeField] private LineRenderer liser;
     private Vector3 liserStartPosition;
 
+   
     private int superShotPower = 0;
     private float currentTime = 0f;
     private int shootAmount = 0;
@@ -27,9 +29,7 @@ public class PlayerBaseManager : MonoBehaviour
     {
         liser.SetPosition(0, Vector3.zero);
         liser.SetPosition(1, Vector3.zero);
-
-        
-  
+        preShotVFX.SetActive(false);
     }
 
     // Update is called once per frame
@@ -44,7 +44,6 @@ public class PlayerBaseManager : MonoBehaviour
         if (currentTime >= countDown)
         {
             superShotPower = GameManager.instance.superShotPower;
-            // shootAmount = 1;
             GameManager.instance.SetSuperShotAmount(1);
             shootAmount = GameManager.instance.GetSuperShotAmount();
             CheckEnemyHighLights();
@@ -61,6 +60,7 @@ public class PlayerBaseManager : MonoBehaviour
     {
         yield return new WaitForSeconds(t);
 
+        preShotVFX.SetActive(false);
         liser.SetPosition(0, Vector3.zero);
         liser.SetPosition(1, Vector3.zero);
 
@@ -111,7 +111,8 @@ public class PlayerBaseManager : MonoBehaviour
 
             if ((enemy.GetComponent<Enemy>().getHelth() - superShotPower) <= 0) { GameManager.instance.IncreaseBalance(extraErning); }
 
-            liser.SetPosition(0, gameObject.transform.position);
+            preShotVFX.SetActive(true);
+            liser.SetPosition(0, partToRotate.position);
             liser.SetPosition(1, enemy.transform.position);
 
             StartCoroutine(cleanLaser(0.7f));

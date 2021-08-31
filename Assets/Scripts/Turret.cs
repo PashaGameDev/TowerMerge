@@ -21,6 +21,7 @@ public class Turret : Unit
     private void Start()
     {
         turretCreated?.Invoke(gameObject);
+        if (isUnit)
         gameObject.layer = 10;
     }
 
@@ -40,13 +41,28 @@ public class Turret : Unit
 
     void FindNewTarget()
     {
-        foreach (var enemy in GameManager.instance.AllEnemies)
+        if (isUnit)
         {
-            float dis = Vector3.Distance(gameObject.transform.position, enemy.transform.position);
-            if (chasingDistance >= dis)
+            foreach (var enemy in GameManager.instance.AllEnemies)
             {
-                newTarget = enemy;
-                break;
+                float dis = Vector3.Distance(gameObject.transform.position, enemy.transform.position);
+                if (chasingDistance >= dis)
+                {
+                    newTarget = enemy;
+                    break;
+                }
+            }
+        }
+        else
+        {
+            foreach (var enemy in GameManager.instance.AllUnits)
+            {
+                float dis = Vector3.Distance(gameObject.transform.position, enemy.transform.position);
+                if (chasingDistance >= dis)
+                {
+                    newTarget = enemy;
+                    break;
+                }
             }
         }
     }

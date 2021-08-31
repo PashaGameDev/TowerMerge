@@ -143,6 +143,9 @@ public class GameManager : MonoBehaviour
         MyUnit.unitDie -= removeUnit;
         MyUnit.unitCreated -= AddUnit;
 
+        Turret.turretCreated -= AddTurret;
+        Turret.turretDie -= RemoveTurret;
+
         BaseHelth.baseDistroyed -= GameOver;
     }
 
@@ -172,13 +175,24 @@ public class GameManager : MonoBehaviour
 
     void AddTurret(GameObject turret)
     {
-        AllUnits.Add(turret);
+        if (turret.GetComponent<Unit>().isUnit)
+        {
+            AllUnits.Add(turret);
+        }
+        else { AllEnemies.Add(turret); }
     }
 
     public void RemoveTurret(GameObject turret)
     {
-        AllUnits.Remove(turret);
+        if (turret.GetComponent<Unit>().isUnit)
+        {
+            AllUnits.Remove(turret);
+        }
+        else { AllEnemies.Remove(turret); }
+        
     }
+
+    
 
     public void StartCountDownBuilUnit(int btnIndex)
     {

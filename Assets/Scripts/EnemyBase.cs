@@ -7,13 +7,14 @@ using UnityEngine.UI;
 public class EnemyBase : MonoBehaviour
 {
     [SerializeField] GameObject [] enemyPrefab;
+    [SerializeField] GameObject enemyTurretPrefab;
+    [SerializeField] GameObject[] enemyTurretCells; 
     [SerializeField] Transform enemySpawnPoint;
+
     [SerializeField] float timeRate = 1f;
 
     [SerializeField] private Text countDownText;
     [SerializeField] private float timerCountDown = 3f;
-
-
 
     public static event Action<GameObject> CreatedEnemy;
 
@@ -47,12 +48,17 @@ public class EnemyBase : MonoBehaviour
         if (t <= 0)
         {
             SpawnWaves();
-            // CreatEnemy();
+            
             t = timeRate;
         }
         else
         {
             t -= Time.deltaTime;
+        }
+
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            TryBuildTurrets();
         }
     }
     void CreatEnemy(int typeEnemy)
@@ -84,6 +90,25 @@ public class EnemyBase : MonoBehaviour
         return enemyToBuild;
     }
 
+    void TryBuildTurrets()
+    {
+        foreach (var cell in enemyTurretCells)
+        {
+            if (cell.GetComponent<CellTurret>().turretOnPlace == null)
+            {
+                buildTurret(cell);
+                break; 
+            }
+        }
+    }
+
+    void buildTurret(GameObject cellToBuild)
+    {
+        GameObject turret = Instantiate(enemyTurretPrefab, cellToBuild.transform.position, Quaternion.identity);
+        cellToBuild.GetComponent<CellTurret>().SetState(true);
+        cellToBuild.GetComponent<CellTurret>().turretOnPlace = turret;
+    }
+
     void SpawnWaves()
     {
         if (spawnedEnemiesTotal <= 5)
@@ -107,6 +132,7 @@ public class EnemyBase : MonoBehaviour
             if (type1inWave <= 3)
             {
                 CreatEnemy(0);
+                TryBuildTurrets();
                 type1inWave++;
             }
             else if (type2inWave <= 3)
