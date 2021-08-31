@@ -8,7 +8,10 @@ public class EnemyBase : MonoBehaviour
 {
     [SerializeField] GameObject[] enemyPrefabs;
     [SerializeField] float timeForThinking = 1.0f;
-    [SerializeField] int defaultErningAmount = 5; 
+    [SerializeField] int defaultErningAmount = 5;
+    [SerializeField] GameObject superGunObject = null;
+    [SerializeField] LineRenderer laser = null;
+
     private List<EnemyCellManager> allCells = new List<EnemyCellManager>();
   
     [SerializeField] GameObject enemyTurretPrefab;
@@ -16,6 +19,11 @@ public class EnemyBase : MonoBehaviour
 
     [SerializeField] private Text countDownText;
     [SerializeField] private float timerCountDown = 3f;
+
+    [SerializeField] private int superShotPower = 40;
+    [SerializeField] private float superShotTimer = 3f;
+    private float countDown = 0f;
+    private int superShotAmount = 0;
    
     public static event Action<GameObject> CreatedEnemy;
 
@@ -53,6 +61,40 @@ public class EnemyBase : MonoBehaviour
         StartCoroutine(MakeDecision());
     }
 
+    void SuperShotCheck()
+    {
+        if (GameManager.instance.AllUnits != null)
+        {
+
+            foreach (var unit in GameManager.instance.AllUnits)
+            {
+                if (unit.GetComponent<Unit>() != null && unit.GetComponent<Unit>().getHelth() <= superShotPower)
+                {
+                    SuperShotAction(unit);
+                    superShotAmount--;
+                    break;
+                }
+            }
+        }       
+    }
+
+    void SuperShotAction(GameObject unitToKill)
+    {
+        LookAtTarget(unitToKill.transform);
+        laser.SetPosition(0, superGunObject.transform.position);
+        laser.SetPosition(1, unitToKill.transform.position);
+
+        StartCoroutine(turnOffLaser());
+        unitToKill.GetComponent<Unit>().GetDemage(superShotPower);
+    }
+
+    IEnumerator turnOffLaser()
+    {
+        yield return new WaitForSeconds(1f);
+
+        laser.SetPosition(0, Vector3.zero);
+        laser.SetPosition(1, Vector3.zero);
+    }
     void BuildUnit()
     {
         GameObject enemyToBuild = enemyPrefabs[UnityEngine.Random.Range(0, enemyPrefabs.Length - 1 )];
@@ -100,7 +142,6 @@ public class EnemyBase : MonoBehaviour
 
     private void Start()
     {
-        
             var Cells = GameObject.FindObjectsOfType<EnemyCellManager>();
             foreach (var cell in Cells)
             {
@@ -109,6 +150,10 @@ public class EnemyBase : MonoBehaviour
         
         StartCoroutine(MakeDecision());
         StartCoroutine(DefaultErning());
+       
+
+        laser.SetPosition(0, Vector3.zero);
+        laser.SetPosition(1, Vector3.zero);
     }
 
     void Update()
@@ -125,7 +170,22 @@ public class EnemyBase : MonoBehaviour
             countDownText.gameObject.SetActive(false);
         }
 
-       
+        if (superShotAmount <= 0)
+        {
+            if (countDown > 0)
+            {
+                countDown -= Time.deltaTime;
+            }
+            else
+            {
+                countDown = superShotTimer;
+                superShotAmount++;
+            }
+        }
+        else
+        {
+            SuperShotCheck();
+        }
     }
 
     void TryBuildTurrets()
@@ -147,5 +207,11 @@ public class EnemyBase : MonoBehaviour
         cellToBuild.GetComponent<CellTurret>().turretOnPlace = turret;
     }
 
-   
+    void LookAtTarget(Transform targetPoit)
+    {
+        Vector3 dir = targetPoit.position - transform.position;
+        Quaternion lookRotation = Quaternion.LookRotation(dir);
+        Vector3 rotation = Quaternion.Lerp(superGunObject.transform.rotation, lookRotation, Time.deltaTime * (10 * 2.75f)).eulerAngles;
+        superGunObject.transform.rotation = Quaternion.Euler(0f, rotation.y, 0f);
+    }
 }
