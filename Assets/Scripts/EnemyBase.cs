@@ -11,6 +11,8 @@ public class EnemyBase : MonoBehaviour
     [SerializeField] int defaultErningAmount = 5;
     [SerializeField] GameObject superGunObject = null;
     [SerializeField] LineRenderer laser = null;
+    [SerializeField] GameObject superShotPostEffect = null;
+    [SerializeField] GameObject laserVFX = null;
 
     private List<EnemyCellManager> allCells = new List<EnemyCellManager>();
   
@@ -81,17 +83,23 @@ public class EnemyBase : MonoBehaviour
     void SuperShotAction(GameObject unitToKill)
     {
         LookAtTarget(unitToKill.transform);
+        laserVFX.SetActive(true);
         laser.SetPosition(0, superGunObject.transform.position);
         laser.SetPosition(1, unitToKill.transform.position);
 
         StartCoroutine(turnOffLaser());
-        unitToKill.GetComponent<Unit>().GetDemage(superShotPower);
+        if (superShotPostEffect != null)
+        {
+            GameObject pVfx = Instantiate(superShotPostEffect, unitToKill.transform.position, Quaternion.identity);
+            Destroy(pVfx,1.5f);
+        }
+        unitToKill.GetComponent<Unit>().GetDemage(superShotPower);    
     }
 
     IEnumerator turnOffLaser()
     {
         yield return new WaitForSeconds(1f);
-
+        laserVFX.SetActive(false);
         laser.SetPosition(0, Vector3.zero);
         laser.SetPosition(1, Vector3.zero);
     }
