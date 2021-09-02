@@ -138,13 +138,15 @@ public class GameManager : MonoBehaviour
     public void decreaseBalace(int amount)
     {
         currentBalance -= amount;
+        if (balanceText !=null)
         balanceText.text = currentBalance.ToString();
     }
 
     public void IncreaseBalance(int amount)
     {
         currentBalance += amount;
-        balanceText.text = currentBalance.ToString();
+        if (balanceText != null)
+            balanceText.text = currentBalance.ToString();
     }
 
     public void OnDestroy()

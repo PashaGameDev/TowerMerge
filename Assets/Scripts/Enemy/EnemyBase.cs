@@ -169,13 +169,16 @@ public class EnemyBase : MonoBehaviour
         if (timerCountDown > 0)
         {
             timerCountDown -= Time.deltaTime;
+            if(countDownText != null)
             countDownText.text = Mathf.RoundToInt(timerCountDown).ToString();
+
             if (timerCountDown < 1) { countDownText.text = "GO!"; }
             return;
         }
         else
         {
-            countDownText.gameObject.SetActive(false);
+            if (countDownText != null)
+                countDownText.gameObject.SetActive(false);
         }
 
         if (superShotAmount <= 0)
