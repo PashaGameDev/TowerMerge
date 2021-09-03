@@ -45,7 +45,7 @@ public class BuidUnitBtn : MonoBehaviour
             //buildUnit();
             makeUnitVisible();
             timer = buildDelay;
-            unitIcon.fillAmount = 0;
+          //  unitIcon.fillAmount = 0;
         }
         else
         {

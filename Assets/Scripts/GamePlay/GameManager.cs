@@ -2,13 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
     public int superShotPower = 30;
     public int currentBalance = 100;
     public int enemyBalance = 60; 
-    public Text balanceText;
+    public TMP_Text balanceText;
     public static GameManager instance = null;
     private List<CellManager> cells = new List<CellManager>();
     

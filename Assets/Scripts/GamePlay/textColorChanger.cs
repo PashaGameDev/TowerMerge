@@ -2,13 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class textColorChanger : MonoBehaviour
 {
     [SerializeField] private int UnitIndex;
 
+    TMP_Text priceText;
     private int unitPrice;
-    Text priceText; 
+    //Text priceText; 
     // Start is called before the first frame update
     void Start()
     {
@@ -53,7 +55,7 @@ public class textColorChanger : MonoBehaviour
                 break;
         }
        
-        priceText = gameObject.GetComponent<Text>();
+        priceText = gameObject.GetComponent<TMP_Text>();
         priceText.text = unitPrice.ToString();
     }
 }

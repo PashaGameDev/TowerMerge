@@ -27,8 +27,7 @@ public class Helth : MonoBehaviour
     
     public void dispalyHelth(int maxHlth, int currentHelth)
     {
-        // helthBar.fillAmount = (float)currentHelth / (float)maxHlth;
-        // if (helthBar.fillAmount <= 0f) { helthCanvas.SetActive(false); }
+       
         if (canvas == null)
         {
             helthBar.fillAmount = (float)currentHelth / (float)maxHlth;
