@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class EnemyBase : MonoBehaviour
 {
@@ -41,7 +42,7 @@ public class EnemyBase : MonoBehaviour
     {
         yield return new WaitForSeconds(timeForThinking);
         
-        int actionIndex = UnityEngine.Random.Range(1,3);
+        int actionIndex = UnityEngine.Random.Range(1,4);
        
         switch (actionIndex)
         {
@@ -49,12 +50,12 @@ public class EnemyBase : MonoBehaviour
                 BuildUnit();
                 break;
             case 2:
-               // BuildUnit();
+                  BuildUnit();
                   SendEnemyFight();
-                TryBuildTurrets();
+               // TryBuildTurrets();
                 break;
             case 3:
-                TryBuildTurrets();
+                 TryBuildTurrets();
                 break;
             default:
                 break;
@@ -65,6 +66,7 @@ public class EnemyBase : MonoBehaviour
 
     void SuperShotCheck()
     {
+        if (UnityEngine.Random.Range(1, 3) > 1) { return; }
         if (GameManager.instance.AllUnits != null)
         {
 
@@ -105,7 +107,9 @@ public class EnemyBase : MonoBehaviour
     }
     void BuildUnit()
     {
-        GameObject enemyToBuild = enemyPrefabs[UnityEngine.Random.Range(0, enemyPrefabs.Length - 1 )];
+        int unitIndex = Random.Range(0, enemyPrefabs.Length);
+        GameObject enemyToBuild = enemyPrefabs[unitIndex];
+        
          
         if (GameManager.instance.enemyBalance >= enemyToBuild.GetComponent<Enemy>().price)
         {

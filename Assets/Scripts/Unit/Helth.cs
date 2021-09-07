@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class Helth : MonoBehaviour
 {
     [SerializeField] private Image helthBar;
-    [SerializeField] private GameObject helthCanvas;
+   // [SerializeField] private GameObject helthCanvas;
     [SerializeField] private GameObject minusLifeText;
     [SerializeField] private GameObject canvas;
     [SerializeField] private GameObject targetHighLight;
@@ -14,24 +14,31 @@ public class Helth : MonoBehaviour
 
     public void TargetHighLigt()
     {
+        
         if (targetHighLight == null)
         { return; }
 
         int helth = gameObject.GetComponent<Unit>().getHelth();
 
         if (GameManager.instance.superShotPower < helth || GameManager.instance.GetSuperShotAmount() <= 0)
-        { targetHighLight.SetActive(false); return; }
+        {// targetHighLight.SetActive(false);
+            helthBar.color = Color.green;
+            return;
+        }
 
-        targetHighLight.SetActive(true);
+       // targetHighLight.SetActive(true);
+
+        helthBar.color = Color.red;
     }
     
     public void dispalyHelth(int maxHlth, int currentHelth)
     {
+        TargetHighLigt();
        
-        if (canvas == null)
+        if (canvas != null && helthBar != null)
         {
             helthBar.fillAmount = (float)currentHelth / (float)maxHlth;
-            if (helthBar.fillAmount <= 0f) { helthCanvas.SetActive(false); }
+            if (helthBar.fillAmount <= 0f) { canvas.SetActive(false); }
             return;
         }
         GameObject minusHPText = Instantiate(minusLifeText, canvas.transform.position, Quaternion.identity, canvas.transform);

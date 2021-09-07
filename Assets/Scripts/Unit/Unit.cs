@@ -20,6 +20,8 @@ public class Unit : MonoBehaviour
     public Helth helthView = null;
     public Animator anim;
     public GameObject shootVFX = null;
+    public Transform getDemagePosition = null;
+    public GameObject gettingDemageVFX = null;
 
     private float speed = 5f;
     private int helth = 100;
@@ -59,12 +61,17 @@ public class Unit : MonoBehaviour
         targetPoit = allPoints[0];
     }
 
-    public void GetDemage(int demageAmount)
+    private void GettinDemageVisualisation()
     {
+        if (getDemagePosition == null || gettingDemageVFX == null) { return; }
+        Instantiate(gettingDemageVFX, getDemagePosition.position, Quaternion.identity, getDemagePosition);
+    }
+    public void GetDemage(int demageAmount)
+    { 
         helth -= demageAmount;
         if(helthView != null)
         helthView.dispalyHelth(maxHelth, helth);
-
+        GettinDemageVisualisation();
         if (helth <= GameManager.instance.superShotPower)
         {
             helthView.TargetHighLigt();

@@ -15,6 +15,7 @@ public class PlayerBaseManager : MonoBehaviour
     [SerializeField] private GameObject superShotIcon = null;
     [SerializeField] private GameObject preShotVFX = null;
     [SerializeField] private Transform partToRotate = null;
+    [SerializeField] private GameObject coinsExpVFX = null;
 
     [SerializeField] private LineRenderer liser;
     private Vector3 liserStartPosition;
@@ -109,7 +110,11 @@ public class PlayerBaseManager : MonoBehaviour
             GameObject VFX = Instantiate(superShootVFX, hit.transform.position, Quaternion.identity);
             Destroy(VFX, 2f);
 
-            if ((enemy.GetComponent<Enemy>().getHelth() - superShotPower) <= 0) { GameManager.instance.IncreaseBalance(extraErning); }
+            if ((enemy.GetComponent<Enemy>().getHelth() - superShotPower) <= 0)
+            {
+                Instantiate(coinsExpVFX, enemy.transform.position, Quaternion.identity);
+                GameManager.instance.IncreaseBalance(extraErning);
+            }
 
             preShotVFX.SetActive(true);
             liser.SetPosition(0, partToRotate.position);
@@ -121,7 +126,7 @@ public class PlayerBaseManager : MonoBehaviour
             enemy.GetDemage(superShotPower);
             shootAmount--;
             GameManager.instance.SetSuperShotAmount(shootAmount);
-            CheckEnemyHighLights();
+         //   CheckEnemyHighLights();
             currentTime = 0f;
         }
         else if (hit.transform.gameObject.layer == 11)
