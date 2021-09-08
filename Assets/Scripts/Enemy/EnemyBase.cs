@@ -84,6 +84,7 @@ public class EnemyBase : MonoBehaviour
 
     void SuperShotAction(GameObject unitToKill)
     {
+        if (unitToKill == null || unitToKill.GetComponent<Turret>() != null) { return; }
         LookAtTarget(unitToKill.transform);
         laserVFX.SetActive(true);
         laser.SetPosition(0, superGunObject.transform.position);
