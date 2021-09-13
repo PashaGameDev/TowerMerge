@@ -78,7 +78,7 @@ public class Turret : Unit
             return;
         }
 
-        RotateToTarget(newTarget.transform.position - transform.position, partToRotate);
+        RotateToTarget(newTarget.transform.position - transform.position, partToRotate, 50f);
         if (chaseTimer <= 0)
         {
             newTarget.GetComponent<Unit>().GetDemage(demage);

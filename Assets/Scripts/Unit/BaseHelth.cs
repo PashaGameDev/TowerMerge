@@ -19,6 +19,11 @@ public class BaseHelth : MonoBehaviour
     {
         helth -= demage;
         helthView.dispalyHelth(maxHelth,helth);
+
+        if (gameObject.tag == "EnemyBase")
+        {
+            gameObject.GetComponent<EnemyBase>().ActivateAllUnits();
+        }
         if (helth <= 0)
         {
             BaseDestroyed();

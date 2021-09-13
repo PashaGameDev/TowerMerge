@@ -64,6 +64,14 @@ public class EnemyBase : MonoBehaviour
         StartCoroutine(MakeDecision());
     }
 
+    public void ActivateAllUnits()
+    {
+        foreach (var enemy in GameManager.instance.AllEnemies)
+        {
+            SendEnemy(enemy);
+        }
+    }
+
     void SuperShotCheck()
     {
         if (UnityEngine.Random.Range(1, 3) > 1) { return; }
@@ -141,12 +149,18 @@ public class EnemyBase : MonoBehaviour
                 && !enemy.GetComponent<Enemy>().isCanMove
                 && enemy.GetComponent<Enemy>().isOnBase)
             {
-                enemy.GetComponent<Enemy>().isCanMove = true;
-                enemy.GetComponent<Enemy>().isOnBase = false;
-                enemy.GetComponent<Enemy>().cell.SetuUnitOnPlace(null);
+                SendEnemy(enemy);
                 break;
             }
         }
+    }
+
+    void SendEnemy(GameObject enemy)
+    {
+        if (enemy == null || enemy.GetComponent<Enemy>() == null || enemy.GetComponent<Enemy>().isCanMove == true) { return; }
+        enemy.GetComponent<Enemy>().isCanMove = true;
+        enemy.GetComponent<Enemy>().isOnBase = false;
+        enemy.GetComponent<Enemy>().cell.SetuUnitOnPlace(null);
     }
     void Merge()
     {

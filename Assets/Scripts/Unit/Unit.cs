@@ -22,6 +22,8 @@ public class Unit : MonoBehaviour
     public GameObject shootVFX = null;
     public Transform getDemagePosition = null;
     public GameObject gettingDemageVFX = null;
+    public Transform bulletPoint = null;
+    public GameObject bulletPrefab = null;
 
     private float speed = 5f;
     private int helth = 100;
@@ -32,6 +34,26 @@ public class Unit : MonoBehaviour
     private float chasingT = 0f;
     private List<GameObject> targetList = new List<GameObject>();
     private GameObject enemyBase;
+
+
+    IEnumerator initBullet()
+    {
+        yield return new WaitForSeconds(0.3f);
+        if (helth > 0)
+        {
+            GameObject bullet = Instantiate(bulletPrefab, bulletPoint.position, Quaternion.identity);
+
+            if (bullet.GetComponent<Bullet>() != null && target != null)
+            {
+                bullet.GetComponent<Bullet>().target = target.transform;
+            }
+            else
+            {
+                Destroy(bullet);
+            }
+            if (target != null) { StartCoroutine(initBullet()); }
+        }
+    }
 
     public int getHelth()
     {
@@ -100,7 +122,7 @@ public class Unit : MonoBehaviour
         if (Vector3.Distance(transform.position, targetPoit.position) <= offset) { GetNextPoint(); return; }
         if (shootVFX != null) { shootVFX.SetActive(false); }
         Vector3 dir = targetPoit.position - transform.position;
-        RotateToTarget(dir, transform);
+        RotateToTarget(dir, transform, speed);
         dir = new Vector3(dir.x, dir.y, dir.z);
         SwitchAnimation("isMove", true);
         SwitchAnimation("isShoot", false);
@@ -168,8 +190,9 @@ public class Unit : MonoBehaviour
             {
                 target = enemy;
                 Vector3 dir = target.transform.position - transform.position;
-                RotateToTarget(dir, transform);
+                RotateToTarget(dir, transform, speed * 5);
                 SwitchAnimation("isShoot", true);
+                if (bulletPoint != null && bulletPrefab != null) { StartCoroutine(initBullet()); }
                 break;
             }
         }
@@ -211,11 +234,11 @@ public class Unit : MonoBehaviour
         
     }
 
-    public void RotateToTarget(Vector3 dir, Transform partToRotate)
+    public void RotateToTarget(Vector3 dir, Transform partToRotate, float rSpeed)
     {
         if (partToRotate == null) { partToRotate = transform; }
         Quaternion lookRotation = Quaternion.LookRotation(dir);
-        Vector3 rotation = Quaternion.Lerp(partToRotate.rotation, lookRotation, Time.deltaTime * (speed * 2.75f)).eulerAngles;
+        Vector3 rotation = Quaternion.Lerp(partToRotate.rotation, lookRotation, Time.deltaTime * (rSpeed * 2.75f)).eulerAngles;
         partToRotate.rotation = Quaternion.Euler(0f, rotation.y, 0f);
     }
 
