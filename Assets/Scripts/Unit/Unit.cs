@@ -38,7 +38,7 @@ public class Unit : MonoBehaviour
 
     IEnumerator initBullet()
     {
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.1f);
         if (helth > 0)
         {
             GameObject bullet = Instantiate(bulletPrefab, bulletPoint.position, Quaternion.identity);
