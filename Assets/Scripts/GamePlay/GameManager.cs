@@ -6,6 +6,8 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] Text EnemyBalanceText;
+
     public int superShotPower = 30;
     public int currentBalance = 100;
     public int enemyBalance = 60; 
@@ -53,11 +55,13 @@ public class GameManager : MonoBehaviour
     public void DecreaseEnemyBalace(int amount)
     {
         enemyBalance -= amount;
+        EnemyBalanceText.text = enemyBalance.ToString();
     }
 
     public void IncreaseEnemyBalance(int amount)
     {
         enemyBalance += amount;
+        EnemyBalanceText.text = enemyBalance.ToString();
     }
 
     public int GetSuperShotAmount()
@@ -173,7 +177,7 @@ public class GameManager : MonoBehaviour
         killedEnemy++;
 
         if(enemy.GetComponent<Enemy>() != null)
-        IncreaseBalance(enemy.GetComponent<Enemy>().price);
+        IncreaseBalance(enemy.GetComponent<Enemy>().price / 2);
 
         AllEnemies.Remove(enemy);
     }
@@ -185,7 +189,7 @@ public class GameManager : MonoBehaviour
 
     public void removeUnit(GameObject unit)
     {
-        if (unit.GetComponent<Unit>() != null) { IncreaseEnemyBalance(unit.GetComponent<MyUnit>().price); }
+        if (unit.GetComponent<Unit>() != null) { IncreaseEnemyBalance(unit.GetComponent<MyUnit>().price / 2); }
         
         AllUnits.Remove(unit);
     }
@@ -219,15 +223,11 @@ public class GameManager : MonoBehaviour
     IEnumerator buildUnitCountDown(float waitTime, int btnIndex)
     {
         yield return new WaitForSeconds(waitTime);
-        Debug.Log("Coroutine");
+       
         buildCountDown -= 0.1f;
         if (buildCountDown > 0f)
         {
             StartCoroutine(buildUnitCountDown(0.1f, btnIndex));
-        }
-        else
-        {
-
         }
     }
 

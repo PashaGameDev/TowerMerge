@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class Helth : MonoBehaviour
 {
@@ -41,8 +42,12 @@ public class Helth : MonoBehaviour
             if (helthBar.fillAmount <= 0f) { canvas.SetActive(false); }
             return;
         }
-        GameObject minusHPText = Instantiate(minusLifeText, canvas.transform.position, Quaternion.identity, canvas.transform);
-        minusHPText.GetComponent<Text>().text = "-" + (maxHlth - currentHelth);
-        Destroy(minusHPText,2f);
+        if ((maxHlth - currentHelth) > 0)
+        {
+            GameObject minusHPText = Instantiate(minusLifeText, canvas.transform.position, Quaternion.identity, canvas.transform);
+            minusHPText.GetComponent<TextMeshPro>().text = "-" + (maxHlth - currentHelth);
+            Destroy(minusHPText, 0.8f);
+        }
+        
     }
 }

@@ -23,6 +23,9 @@ public class Turret : Unit
         turretCreated?.Invoke(gameObject);
         if (isUnit)
         gameObject.layer = 10;
+
+        if (cell != null)
+        cell.GetComponent<CellTurret>().PriceViewState(false);
     }
 
     
@@ -95,6 +98,7 @@ public class Turret : Unit
         turretDie?.Invoke(gameObject);
         if (cell != null)
         {
+            cell.GetComponent<CellTurret>().PriceViewState(true);
             cell.GetComponent<CellTurret>().SetState(false);
             cell.GetComponent<CellTurret>().turretOnPlace = null;
         }

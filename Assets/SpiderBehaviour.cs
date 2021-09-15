@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SpiderBehaviour : MonoBehaviour
 {
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -14,5 +15,10 @@ public class SpiderBehaviour : MonoBehaviour
     void Update()
     {
         
+    }
+
+    void Move()
+    {
+
     }
 }
