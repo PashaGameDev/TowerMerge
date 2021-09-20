@@ -16,7 +16,11 @@ public class CellTurret : MonoBehaviour
     private void Update()
     {
         if (priceText == null) { return; }
-        if (turretPrice >= GameManager.instance.currentBalance)
+        if (turretPrice <= 0)
+        {
+            turretPrice = GameManager.instance.turretsArray[0].GetComponent<Turret>().price;  
+        }
+        if (turretPrice > GameManager.instance.currentBalance)
         {
             priceText.color = Color.red;
         }
@@ -29,7 +33,7 @@ public class CellTurret : MonoBehaviour
 
     public void PriceViewState(bool state)
     {
-        if (canvas != null)
+        if (canvas == null) { return; }
             canvas.SetActive(state);
     }
 

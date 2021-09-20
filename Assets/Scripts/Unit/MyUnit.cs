@@ -5,12 +5,14 @@ using UnityEngine;
 
 public class MyUnit : Unit
 {
-
+    public Color unitColor = new Color();
     public CellManager myCell = null;
     public static event Action<GameObject> unitDie;
     public static event Action<GameObject> unitCreated;
+  
 
     public int price = 30;
+    public int giveForKill = 20;
 
     private void Start()
     {
@@ -22,7 +24,7 @@ public class MyUnit : Unit
     public void SetCell(CellManager cell)
     {
         myCell = cell;
-        myCell.SetuUnitOnPlace(this.gameObject);
+        myCell.SetuUnitOnPlace(this.gameObject, unitColor); 
     }
 
     public CellManager GetCell()
@@ -47,7 +49,7 @@ public class MyUnit : Unit
 
     public void cleanCell()
     {
-        myCell.SetuUnitOnPlace(null);
+        myCell.SetuUnitOnPlace(null, Color.white);
     }
 
     private void OnDestroy()

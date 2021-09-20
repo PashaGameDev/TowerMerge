@@ -232,9 +232,12 @@ public class EnemyBase : MonoBehaviour
 
     void buildTurret(GameObject cellToBuild)
     {
+        if (enemyTurretPrefab.GetComponent<Turret>().price > GameManager.instance.enemyBalance) { return; }
+
         GameObject turret = Instantiate(enemyTurretPrefab, cellToBuild.transform.position, Quaternion.identity);
         cellToBuild.GetComponent<CellTurret>().SetState(true);
         cellToBuild.GetComponent<CellTurret>().turretOnPlace = turret;
+        GameManager.instance.DecreaseEnemyBalace(turret.GetComponent<Turret>().price);
     }
 
     void LookAtTarget(Transform targetPoit)

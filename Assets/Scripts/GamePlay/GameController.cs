@@ -70,7 +70,7 @@ public class GameController : MonoBehaviour
         if (mouseMoveDis <= mouseOffset && choosenUnit != null)
         {
             choosenUnit.GetComponent<MyUnit>().isCanMove = true;
-            choosenUnit.GetComponent<MyUnit>().myCell.SetuUnitOnPlace(null);
+            choosenUnit.GetComponent<MyUnit>().myCell.SetuUnitOnPlace(null, Color.white);
                 
             choosenUnit = null;
             CleanChoosenUnit();

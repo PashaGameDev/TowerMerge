@@ -177,7 +177,7 @@ public class GameManager : MonoBehaviour
         killedEnemy++;
 
         if(enemy.GetComponent<Enemy>() != null)
-        IncreaseBalance(enemy.GetComponent<Enemy>().price / 2);
+        IncreaseBalance(enemy.GetComponent<Enemy>().giveForKill);
 
         AllEnemies.Remove(enemy);
     }
@@ -189,7 +189,7 @@ public class GameManager : MonoBehaviour
 
     public void removeUnit(GameObject unit)
     {
-        if (unit.GetComponent<Unit>() != null) { IncreaseEnemyBalance(unit.GetComponent<MyUnit>().price / 2); }
+        if (unit.GetComponent<Unit>() != null) { IncreaseEnemyBalance(unit.GetComponent<MyUnit>().giveForKill); }
         
         AllUnits.Remove(unit);
     }
@@ -207,9 +207,15 @@ public class GameManager : MonoBehaviour
     {
         if (turret.GetComponent<Unit>().isUnit)
         {
+            IncreaseEnemyBalance(turret.GetComponent<Turret>().price);
             AllUnits.Remove(turret);
+            
         }
-        else { AllEnemies.Remove(turret); }
+        else
+        {
+            IncreaseBalance(turret.GetComponent<Turret>().price);
+            AllEnemies.Remove(turret);
+        }
         
     }
 

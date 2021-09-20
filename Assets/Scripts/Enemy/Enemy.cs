@@ -8,6 +8,7 @@ public class Enemy : Unit
     public static event Action<GameObject> enemyDied;
     public EnemyCellManager cell; 
     public int price = 10;
+    public int giveForKill = 20;
     public bool isOnBase = true;
 
     [SerializeField] private bool isTurret = false;
