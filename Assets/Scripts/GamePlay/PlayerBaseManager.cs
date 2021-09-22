@@ -16,6 +16,7 @@ public class PlayerBaseManager : MonoBehaviour
     [SerializeField] private GameObject preShotVFX = null;
     [SerializeField] private Transform partToRotate = null;
     [SerializeField] private GameObject coinsExpVFX = null;
+    [SerializeField] private GameObject superShotHightLight = null;
 
     [SerializeField] private LineRenderer liser;
     private Vector3 liserStartPosition;
@@ -48,9 +49,13 @@ public class PlayerBaseManager : MonoBehaviour
             GameManager.instance.SetSuperShotAmount(1);
             shootAmount = GameManager.instance.GetSuperShotAmount();
             CheckEnemyHighLights();
+            if (superShotHightLight != null)
+            { superShotHightLight.SetActive(true); }
         }
         else
         {
+            if (superShotHightLight != null)
+            { superShotHightLight.SetActive(false); }
             currentTime += Time.deltaTime;
             float fillAmount = currentTime / countDown;
             superShotImage.fillAmount = fillAmount;

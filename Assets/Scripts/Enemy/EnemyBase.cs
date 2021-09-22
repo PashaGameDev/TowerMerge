@@ -14,6 +14,7 @@ public class EnemyBase : MonoBehaviour
     [SerializeField] LineRenderer laser = null;
     [SerializeField] GameObject superShotPostEffect = null;
     [SerializeField] GameObject laserVFX = null;
+    [SerializeField] GameObject superShotHighLight = null;
 
     private List<EnemyCellManager> allCells = new List<EnemyCellManager>();
   
@@ -204,10 +205,15 @@ public class EnemyBase : MonoBehaviour
         {
             if (countDown > 0)
             {
+                if (superShotHighLight != null)
+                {superShotHighLight.SetActive(false); }
+               
                 countDown -= Time.deltaTime;
             }
             else
             {
+                if (superShotHighLight != null)
+                { superShotHighLight.SetActive(true); }
                 countDown = superShotTimer;
                 superShotAmount++;
             }
