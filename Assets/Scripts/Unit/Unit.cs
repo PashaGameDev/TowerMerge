@@ -102,10 +102,7 @@ public class Unit : MonoBehaviour
         if (helth <= 0)
         {
             Die();
-        }
-
-
-       
+        }   
     }
 
     public void Move()
@@ -131,7 +128,6 @@ public class Unit : MonoBehaviour
 
     void GetNextPoint()
     {
-       
         if (enemyBase == null) { return; }
         float minDis = Vector3.Distance(transform.position, allPoints[0].transform.position);
         int index = 0;
@@ -149,7 +145,6 @@ public class Unit : MonoBehaviour
  
        if (pointIndex >= allPoints.Count && enemyBase != null) { targetPoit = enemyBase.transform; return; }
         targetPoit = allPoints[pointIndex];
-
     }
 
     void AttackBase()
@@ -181,12 +176,13 @@ public class Unit : MonoBehaviour
         }
 
         if (target != null) { if (shootVFX != null) { shootVFX.SetActive(true); } ChaseTarget();return; }
+
         foreach (GameObject enemy in targetList)
         {
             if (enemy == null) { return; }
             float dis = Vector3.Distance(gameObject.transform.position,enemy.transform.position);
             
-            if (dis <= chasingDistance)
+            if (dis <= chasingDistance && enemy.layer != 6)
             {
                 target = enemy;
                 Vector3 dir = target.transform.position - transform.position;
@@ -200,7 +196,7 @@ public class Unit : MonoBehaviour
 
     void ChaseTarget()
     {
-        if (target == null ) {  return; } //|| target == enemyBase)
+        if (target == null ) {  return; } 
         if (chasingT <= 0)
         {
             if (target.GetComponent<Unit>() == null)
@@ -230,8 +226,7 @@ public class Unit : MonoBehaviour
         else
         {
             Destroy(gameObject);
-        }
-        
+        }    
     }
 
     public void RotateToTarget(Vector3 dir, Transform partToRotate, float rSpeed)
@@ -247,7 +242,5 @@ public class Unit : MonoBehaviour
         if (anim == null) { return; }
 
         anim.SetBool(animTag,state);
-    }
-    
-   
+    } 
 }
