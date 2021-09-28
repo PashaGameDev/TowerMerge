@@ -22,11 +22,10 @@ public class Helth : MonoBehaviour
         int helth = gameObject.GetComponent<Unit>().getHelth();
 
         if (GameManager.instance.superShotPower < helth || GameManager.instance.GetSuperShotAmount() <= 0)
-        {// targetHighLight.SetActive(false);
+        {
             helthBar.color = Color.green;
             return;
         }
-
        // targetHighLight.SetActive(true);
 
         helthBar.color = Color.red;
