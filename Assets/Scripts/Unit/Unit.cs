@@ -35,7 +35,6 @@ public class Unit : MonoBehaviour
     private List<GameObject> targetList = new List<GameObject>();
     private GameObject enemyBase;
 
-
     IEnumerator initBullet()
     {
         yield return new WaitForSeconds(0.1f);
@@ -91,6 +90,9 @@ public class Unit : MonoBehaviour
     public void GetDemage(int demageAmount)
     { 
         helth -= demageAmount;
+
+        if (isUnit) { GameManager.instance.totalEnemyDemageMade += demageAmount; } else { GameManager.instance.totalUnitDemageMade += demage; }
+       
         if(helthView != null)
         helthView.dispalyHelth(maxHelth, helth);
         GettinDemageVisualisation();
@@ -203,6 +205,14 @@ public class Unit : MonoBehaviour
             { enemyBase.GetComponent<BaseHelth>().GetDemage(demage); }
             else { target.GetComponent<Unit>().GetDemage(demage); }
 
+            if (isUnit)
+            {
+                GameManager.instance.SetDemageGaveUnis(unitType, demage);
+            }
+            else
+            {
+                GameManager.instance.SetDemageGaveEnemy(unitType, demage);
+            }
             
             chasingT = chasingRate;
         }

@@ -10,7 +10,9 @@ public class GameManager : MonoBehaviour
 
     public int superShotPower = 30;
     public int currentBalance = 100;
-    public int enemyBalance = 60; 
+    public int enemyBalance = 60;
+    public int totalUnitDemageMade = 0;
+    public int totalEnemyDemageMade = 0;
     public TMP_Text balanceText;
     public static GameManager instance = null;
     private List<CellManager> cells = new List<CellManager>();
@@ -22,8 +24,33 @@ public class GameManager : MonoBehaviour
     public GameObject[] turretsArray = null;
     public GameObject gameOverPanel = null;
 
-    public Image[] unitIconCountDown; 
+    public Image[] unitIconCountDown;
+
+    public int[] demageGaveUnis = new int[] {0,0,0,0 };
+    public int[] demageGaveEnemy = new int[] {0,0,0,0 };
+
+    public int GetDemageGaveUnis(int index)
+    {
+        return demageGaveUnis[index];
+    }
+
+    public void SetDemageGaveUnis(int index, int demageAmount)
+    {
+        demageGaveUnis[index] += demageAmount;
+    }
+
+    public int GetDemageGaveEnemy(int index)
+    {
+        return demageGaveEnemy[index];
+    }
+
+    public void SetDemageGaveEnemy(int index, int demageAmount)
+    {
+        demageGaveEnemy[index] += demageAmount;
+    }
+
     public GameObject getUnitToCreat(int unitType, int index)
+
     {
         switch (unitType)
         {
@@ -241,6 +268,6 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 0.1f;
         gameOverPanel.SetActive(true);
-        gameOverPanel.GetComponent<GameOver>().resultTest.text = "You " + result + "!!!";
+      
     }
 }
