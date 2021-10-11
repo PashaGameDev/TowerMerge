@@ -163,10 +163,7 @@ public class EnemyBase : MonoBehaviour
         enemy.GetComponent<Enemy>().isOnBase = false;
         enemy.GetComponent<Enemy>().cell.SetuUnitOnPlace(null);
     }
-    void Merge()
-    {
-        Debug.Log("Merge");
-    }
+    
 
     private void Start()
     {

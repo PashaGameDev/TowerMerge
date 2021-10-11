@@ -7,6 +7,8 @@ public class StartSceneCanvas : MonoBehaviour
 {
 
     [SerializeField] private Animator anim = null;
+    public List<GameObject> sqaudCollection = new List<GameObject>();
+     
 
     public void StartBattle()
     {
@@ -20,8 +22,5 @@ public class StartSceneCanvas : MonoBehaviour
     {
         yield return new WaitForSeconds(1.8f);
         SceneManager.LoadScene(1,LoadSceneMode.Single);
-    }
-
-
-   
+    }  
 }

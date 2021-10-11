@@ -29,7 +29,7 @@ public class Unit : MonoBehaviour
     private int helth = 100;
     private GameObject target = null;
     private List<Transform> allPoints = new List<Transform>();
-    private Transform targetPoit = null;
+    private Transform targetPoit = null; 
     private int pointIndex = 0;
     private float chasingT = 0f;
     private List<GameObject> targetList = new List<GameObject>();

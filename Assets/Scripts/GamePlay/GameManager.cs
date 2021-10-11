@@ -23,6 +23,8 @@ public class GameManager : MonoBehaviour
     public GameObject[] unitsArrayType3 = null;
     public GameObject[] turretsArray = null;
     public GameObject gameOverPanel = null;
+    public TextMeshProUGUI PlayerResult = null;
+    public TextMeshProUGUI EnemyResult = null;
 
     public Image[] unitIconCountDown;
 
@@ -245,9 +247,6 @@ public class GameManager : MonoBehaviour
         }
         
     }
-
-    
-
     public void StartCountDownBuilUnit(int btnIndex)
     {
         StartCoroutine(buildUnitCountDown(0.1f,btnIndex));
@@ -268,6 +267,18 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 0.1f;
         gameOverPanel.SetActive(true);
-      
+
+        if (PlayerResult == null || EnemyResult == null) { return; }
+
+        if (result == "Win")
+        {
+            PlayerResult.text = "VICTORY";
+            EnemyResult.text = "DEFEAT";
+        }
+        else
+        {
+            PlayerResult.text = "DEFEAT";
+            EnemyResult.text = "VICTORY";
+        }
     }
 }
