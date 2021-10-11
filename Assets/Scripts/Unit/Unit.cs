@@ -226,17 +226,12 @@ public class Unit : MonoBehaviour
     {
         
         if (shootVFX != null) { shootVFX.SetActive(false); }
-        if (isUnit && gameObject.GetComponent<Rigidbody>() != null )
-        {
+        if (gameObject.GetComponent<Rigidbody>() != null )
             gameObject.GetComponent<Rigidbody>().useGravity = false;
-            SwitchAnimation("isDied", true);
-            isCanMove = false;
-            Destroy(this.gameObject, 2f);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }    
+        
+        SwitchAnimation("isDied", true);
+        isCanMove = false;
+        Destroy(this.gameObject, 2f); 
     }
 
     public void RotateToTarget(Vector3 dir, Transform partToRotate, float rSpeed)
