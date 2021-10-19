@@ -8,6 +8,7 @@ public class TutorialUnit : MonoBehaviour
 
     [SerializeField] Animator anim = null;
     [SerializeField] GameObject arrowPointer = null;
+    [SerializeField] GameObject shootFVX = null;
 
     private float offset = 0.5f;
     private int pointIndex = 0;
@@ -15,8 +16,13 @@ public class TutorialUnit : MonoBehaviour
     private GameObject targetEnemy = null; 
     private Transform targetPoit = null;
     private List<Transform> allPoints = new List<Transform>();
+    private TutorialController tutorialController = null;
     private bool isCanMove = false;
 
+    public void SetController(TutorialController _t)
+    {
+        tutorialController = _t;
+    }
     public void SetTarget(GameObject _t)
     {
         targetEnemy = _t;
@@ -78,7 +84,14 @@ public class TutorialUnit : MonoBehaviour
             }
         }
 
-        if (pointIndex >= allPoints.Count) { isCanMove = false; StartCoroutine(AttachEnemy()); anim.SetBool("isShoot", true); return; }
+        if (pointIndex >= allPoints.Count)
+        {
+            isCanMove = false;
+            StartCoroutine(AttachEnemy());
+            anim.SetBool("isShoot", true);
+            shootFVX.SetActive(true);
+            return;
+        }
         targetPoit = allPoints[pointIndex];
         anim.SetBool("isMove", true);
     }
@@ -87,10 +100,15 @@ public class TutorialUnit : MonoBehaviour
     {
         yield return new WaitForSeconds(0.2f);
         if (targetEnemy!= null)
-        targetEnemy.GetComponent<DummyEnemy>().GetDemage(10);
+        targetEnemy.GetComponent<DummyEnemy>().GetDemage(10f);
         if (targetEnemy != null)
         {
             StartCoroutine(AttachEnemy());
+        }
+        else
+        {
+            tutorialController.SwitchTextInHint(tutorialController.tutorialStep);
+            Destroy(this.gameObject);
         }
 
     }
