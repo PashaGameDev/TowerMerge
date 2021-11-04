@@ -45,7 +45,7 @@ public class TutorialController : MonoBehaviour
 
     public void SwitchTextInHint(int StepIndex)
     {
-        Debug.Log("StepIdex = "+StepIndex);
+      //  Debug.Log("StepIdex = "+StepIndex);
 
         if (StepIndex == 4)
         {
@@ -111,6 +111,7 @@ public class TutorialController : MonoBehaviour
     void Step4()
     {
         tutorialCanvas.SetActive(true);
+      
     }
 
     void CreatTheUnit()
@@ -191,7 +192,7 @@ public class TutorialController : MonoBehaviour
                 case UnityEngine.TouchPhase.Ended:
                     lastMousePosition = touch.position;
                     if (choosenUnit != null) { choosenUnit.layer = 6; }
-                    Merge()
+                    Merge();
 
                     break;
             }
@@ -291,6 +292,8 @@ public class TutorialController : MonoBehaviour
     {
         GameObject enemy = Instantiate(targetEnemyPrefab, enemySpawnPoint.position, Quaternion.identity);
         enemy.GetComponent<DummyEnemy>().SetHelth();
+        HintText.text = TutorialHints[6];
+        tutorialCanvas.SetActive(true);
     }
 
 }

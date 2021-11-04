@@ -8,12 +8,14 @@ public class StartSceneCanvas : MonoBehaviour
 
     [SerializeField] private Animator anim = null;
     public List<GameObject> sqaudCollection = new List<GameObject>();
-     
 
-    public void StartBattle()
+    private string SceneToLoad = null;
+
+    public void StartBattle(string SceneName)
     {
         if (anim == null) { return; }
 
+        SceneToLoad = SceneName;
         anim.SetBool("ButtleRun",true);
         StartCoroutine(LoadScene());
     }
@@ -21,6 +23,6 @@ public class StartSceneCanvas : MonoBehaviour
     IEnumerator LoadScene()
     {
         yield return new WaitForSeconds(1.8f);
-        SceneManager.LoadScene(1,LoadSceneMode.Single);
+        SceneManager.LoadScene(SceneToLoad,LoadSceneMode.Single);
     }  
 }

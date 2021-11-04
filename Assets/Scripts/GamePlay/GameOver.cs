@@ -11,6 +11,6 @@ public class GameOver : MonoBehaviour
     public void RestartLevel()
     {
         Time.timeScale = 1.0f;
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene("StartScene");
     }
 }
