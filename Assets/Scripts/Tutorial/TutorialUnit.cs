@@ -39,6 +39,9 @@ public class TutorialUnit : MonoBehaviour
     }
     private void Update()
     {
+        if (tutorialController.tutorialStep == 2|| tutorialController.tutorialStep == 6) { arrowPointer.SetActive(true); } else { arrowPointer.SetActive(false); }
+       
+        if (!isCanMove && anim.GetBool("isShoot")) { arrowPointer.SetActive(false); return; }
         if (!isCanMove) { return; }
         arrowPointer.SetActive(false);
         Move();
@@ -87,6 +90,7 @@ public class TutorialUnit : MonoBehaviour
         if (pointIndex >= allPoints.Count)
         {
             isCanMove = false;
+           
             StartCoroutine(AttachEnemy());
             anim.SetBool("isShoot", true);
             shootFVX.SetActive(true);
@@ -107,7 +111,7 @@ public class TutorialUnit : MonoBehaviour
         }
         else
         {
-            tutorialController.SwitchTextInHint(tutorialController.tutorialStep);
+          //  tutorialController.SwitchTextInHint(tutorialController.tutorialStep);
             Destroy(this.gameObject);
         }
 

@@ -64,7 +64,8 @@ public class TutorialTowerController : MonoBehaviour
             StartCoroutine(cleanLaser(0.7f));
 
             partToRotate.LookAt(enemy.transform);
-            Destroy(enemy.gameObject);
+            enemy.gameObject.GetComponent<DummyEnemy>().GetDemage(1000);
+            //Destroy(enemy.gameObject);
         } 
     }
     IEnumerator cleanLaser(float t)

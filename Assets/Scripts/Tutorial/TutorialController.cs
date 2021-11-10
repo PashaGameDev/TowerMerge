@@ -4,20 +4,22 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class TutorialController : MonoBehaviour
 {
-    [SerializeField] float mouseOffset = 0.7f;
+    
     [SerializeField] GameObject tutorialCanvas = null;
+    [SerializeField] GameObject finalPanel = null;
     [SerializeField] List<string> TutorialHints = new List<string>();
     [SerializeField] TextMeshProUGUI HintText = null;
     [SerializeField] Image unitIcon = null;
     [SerializeField] GameObject runBtn = null;
-    [SerializeField] GameObject arrow = null;
+    public GameObject arrow = null;
     [SerializeField] GameObject tutorialUnit = null;
-    [SerializeField] GameObject tutorialUnit2 = null;
-    [SerializeField] GameObject cell1 = null;
-    [SerializeField] GameObject cell2 = null;
+    public GameObject tutorialUnit2 = null;
+    public  GameObject cell1 = null;
+    public  GameObject cell2 = null;
     [SerializeField] GameObject targetEnemyPrefab = null;
     [SerializeField] Transform enemySpawnPoint = null;
     [SerializeField] float unitCreatingDelay = 2f;
@@ -29,102 +31,64 @@ public class TutorialController : MonoBehaviour
     GameObject unit2 = null;
     GameObject buildSpot = null;
 
-    GameObject intersectedObject = null;
-    GameObject choosenUnit = null;
+    public GameObject intersectedObject = null;
+    public GameObject choosenUnit = null;
 
 
     private int createdUnits = 0;
+    private int amountEnemy = 0;
 
     Vector3 startPositionChoosenUnit = Vector3.zero;
     Vector3 startMousPosition = Vector3.zero;
     Vector3 lastMousePosition = Vector3.zero;
 
-    bool isUnitCreated = false;
+    public bool isUnitCreated = false;
 
-    public int tutorialStep = 0; 
+    public int tutorialStep = 0;
 
-    public void SwitchTextInHint(int StepIndex)
+
+    public void SetPopupState(bool state, string newHintText, float bgAlpha)
     {
-      //  Debug.Log("StepIdex = "+StepIndex);
-
-        if (StepIndex == 4)
-        {
-            SuperShotStep();
-            return;
-        }
-
-        if (StepIndex == 1 && tutorialStep == 3)
-        {
-           CreatTheUnit();
-        }
-        if (StepIndex != tutorialStep) { return; }
-        tutorialStep++;
-        
-        if (tutorialStep >= TutorialHints.Count) { return; }
-        HintText.text = TutorialHints[tutorialStep];
-       
-        RunTutorialStep();
-       
-        
-    }
-
-    void RunTutorialStep()
-    {
-        switch (tutorialStep)
-        {
-            case 1:
-                Step1();
-                break;
-            case 2:
-                Step2();
-                break;
-            case 3:
-                Step3();
-                break;
-           case 5:
-                Step4();
-                break;
-            default:
-                break;
-        }
-    }
-
-    void Step1()
-    {
-        if (arrow != null)
-            arrow.SetActive(true);
+        HintText.text = newHintText;
+        tutorialCanvas.SetActive(state);
+        tutorialCanvas.GetComponent<Image>().color = new Color(0f,0f,0f,bgAlpha);
         runBtn.SetActive(false);
     }
 
-    void Step2()
+    public void Step1RunTutorial()
     {
-        if (arrow != null)
-        arrow.SetActive(false);
-        CreatTheUnit();
+        SetPopupState(true, "Create the Unit",0.5f);
+        tutorialStep = 1;
+       if (arrow != null)
+        arrow.SetActive(true);  
     }
 
-    void Step3()
+    public void CreatUnitBtn()
     {
-        tutorialCanvas.SetActive(true);
+        if (tutorialStep == 1)
+        { CreatTheUnit(2, cell1); }
+        else
+        if (tutorialStep == 3)
+        { CreatTheUnit(4, cell1); }
+        else
+        if (tutorialStep == 4)
+        { CreatTheUnit(5, cell2); }
+        else { return; }
     }
 
-    void Step4()
+    public void CreatTheUnit(int newStepNumber, GameObject cellType)
     {
-        tutorialCanvas.SetActive(true);
-      
-    }
-
-    void CreatTheUnit()
-    {
-        if (tutorialCanvas != null)
-        { tutorialCanvas.SetActive(false); }
-
-        if (tutorialUnit == null || cell1 == null) { return; }
-        if (createdUnits > 2) { return; }
-        unitIcon.fillAmount = 0;
         StartCoroutine(unitCreation());
-        if (createdUnits <= 1) { buildSpot = cell1; } else { buildSpot = cell2; }
+        unitIcon.fillAmount = 0;
+        buildSpot = cellType;
         buildSpot.GetComponent<Renderer>().material.color = Color.green;
+        tutorialStep = newStepNumber;
+    }
+
+    public void RunSuperShotStep()
+    {
+        SetPopupState(true, "Finish Him",0f);
+        CreatEnemy(null);
     }
 
     IEnumerator unitCreation()
@@ -134,166 +98,54 @@ public class TutorialController : MonoBehaviour
         unitIcon.fillAmount = unitIcon.fillAmount + 0.01f;
         if (unitCreatingDelay <= 0)
         {
-            unitIcon.fillAmount = 1;  
+            unitIcon.fillAmount = 1;
             unit1 = Instantiate(tutorialUnit, buildSpot.transform.position, Quaternion.identity);
-            unit1.GetComponent<TutorialUnit>().SetController(this.gameObject.GetComponent<TutorialController>());
-            tutorialCanvas.SetActive(true);
-            isUnitCreated = true;
+            unit1.GetComponent<TutorialUnit>().SetController(gameObject.GetComponent<TutorialController>());
+            arrow.SetActive(false);
             unitCreatingDelay = 1f;
-            createdUnits++;
-            if (createdUnits > 2) { SwitchTextInHint(tutorialStep); }
+           
+            SetPopupState(true, TutorialHints[tutorialStep], 0f);
+            if (tutorialStep == 2)
+            { CreatEnemy(unit1.GetComponent<TutorialUnit>()); }
+            else if(tutorialStep == 4) {arrow.SetActive(true); }
         }
         else
         {
             StartCoroutine(unitCreation());
         }
+
     }
 
-    private void Update()
+    public void CreatEnemy(TutorialUnit unit)
     {
-        
-        if (!isUnitCreated) { return; }
-
-#if UNITY_EDITOR
-        if (Mouse.current.leftButton.wasPressedThisFrame)
-        {
-            startMousPosition = Input.mousePosition;
-            
-        }
-        if (Mouse.current.leftButton.isPressed)
-        {
-            CheckTouchedObject(Input.mousePosition);
-        }
-        if (Mouse.current.leftButton.wasReleasedThisFrame)
-        {
-            lastMousePosition = Input.mousePosition;
-            if (choosenUnit != null) { choosenUnit.layer = 6;}
-            
-             Merge();
-        }
-#else
-
-        if (Input.touchCount > 0)
-        {
-            Touch touch = Input.GetTouch(0);
-
-            switch (touch.phase)
-            {
-                case UnityEngine.TouchPhase.Began:
-                    startMousPosition = touch.position;
-                    CheckTouchedObject(touch.position);
-                    break;
-
-                case UnityEngine.TouchPhase.Moved:
-                   CheckTouchedObject(touch.position);
-
-                    break;
-
-                case UnityEngine.TouchPhase.Ended:
-                    lastMousePosition = touch.position;
-                    if (choosenUnit != null) { choosenUnit.layer = 6; }
-                    Merge();
-
-                    break;
-            }
-        }
-
-#endif
-    }
-    void CreatEnemy(TutorialUnit unit)
-    {
-        if (unit == null) { return; }
         GameObject enemy = Instantiate(targetEnemyPrefab, enemySpawnPoint.position, Quaternion.identity);
-        unit.SetTarget(enemy);
-    }
-    void Merge()
-    {
-        float mouseMoveDis = Vector3.Distance(startMousPosition, lastMousePosition);
-        if (mouseMoveDis <= mouseOffset && choosenUnit != null)
-        {
-            if (tutorialStep == 2 || tutorialStep == 4)
-            {
-                choosenUnit.GetComponent<TutorialUnit>().Touched();
-                CreatEnemy(choosenUnit.GetComponent<TutorialUnit>());
-                tutorialCanvas.SetActive(false);
-                // choosenUnit.GetComponent<MyUnit>().myCell.SetuUnitOnPlace(null, Color.white);
-                choosenUnit = null;
-                cell1.GetComponent<Renderer>().material.color = Color.white;
-                cell2.GetComponent<Renderer>().material.color = Color.white;
+        enemy.GetComponent<DummyEnemy>().SetTControl(gameObject.GetComponent<TutorialController>());
 
-                CleanChoosenUnit();
-                return;
-            }
-        }
-        
-
-        if (choosenUnit != null && intersectedObject != null)
+        if (unit != null)
         {
-            Vector3 instPost = cell2.transform.position;
-            GameObject unit3 =  Instantiate(tutorialUnit2, instPost, Quaternion.identity);
-            unit3.GetComponent<TutorialUnit>().SetController(this.gameObject.GetComponent<TutorialController>());
-            
-            HintText.text = TutorialHints[tutorialStep+1];
-            cell1.GetComponent<Renderer>().material.color = Color.white;
-            cell2.GetComponent<Renderer>().material.color = Color.yellow;
-            Destroy(choosenUnit);
-            Destroy(intersectedObject);
-        
+            unit.SetTarget(enemy);
         }
         else
         {
-            CleanChoosenUnit();
+            enemy.GetComponent<DummyEnemy>().SetHelth();
+            enemy.layer = 9;
         }
+
     }
 
-    void CheckTouchedObject(Vector3 mPos)
+    public void showFinalPopup()
     {
-        Ray ray = Camera.main.ScreenPointToRay(mPos);
-
-        if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, rayLayer)) { return; }
-
-        if (choosenUnit != null)
-        {
-            choosenUnit.transform.position = new Vector3(hit.point.x, choosenUnit.transform.position.y, hit.point.z);
-            tutorialCanvas.SetActive(false);
-        }
-
-        if (hit.collider.TryGetComponent<TutorialUnit>(out TutorialUnit tUnit))
-        {
-            SetChoosenUnit(hit.collider.gameObject);
-        }
-        else
-        {
-            intersectedObject = null;
-        }
-
+        StartCoroutine(showFinalPopupDelay());
     }
 
-    void SetChoosenUnit(GameObject t)
-    { 
-        if (choosenUnit != null) { intersectedObject = t; return; }
-
-        choosenUnit = t;
-        choosenUnit.layer = 8;
-
-        startPositionChoosenUnit = choosenUnit.transform.position;
-    }
-
-    void CleanChoosenUnit()
+    IEnumerator showFinalPopupDelay()
     {
-        if (choosenUnit != null) { tutorialCanvas.SetActive(true); choosenUnit.transform.position = startPositionChoosenUnit; }
-
-        choosenUnit = null;
-
-        intersectedObject = null;
+        yield return new WaitForSeconds(2f);
+        finalPanel.SetActive(true);
     }
 
-    void SuperShotStep()
+    public void GoHomeBtn()
     {
-        GameObject enemy = Instantiate(targetEnemyPrefab, enemySpawnPoint.position, Quaternion.identity);
-        enemy.GetComponent<DummyEnemy>().SetHelth();
-        HintText.text = TutorialHints[6];
-        tutorialCanvas.SetActive(true);
+        SceneManager.LoadScene("StartScene", LoadSceneMode.Single);
     }
-
 }
