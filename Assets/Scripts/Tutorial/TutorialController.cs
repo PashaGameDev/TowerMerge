@@ -49,6 +49,7 @@ public class TutorialController : MonoBehaviour
 
     public void SetPopupState(bool state, string newHintText, float bgAlpha)
     {
+        tutorialCanvas.SetActive(false);
         HintText.text = newHintText;
         tutorialCanvas.SetActive(state);
         tutorialCanvas.GetComponent<Image>().color = new Color(0f,0f,0f,bgAlpha);
