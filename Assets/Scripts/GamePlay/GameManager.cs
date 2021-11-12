@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI EnemyResult = null;
 
     public Image[] unitIconCountDown;
+    public bool roundResult = false;
 
     public int[] demageGaveUnis = new int[] {0,0,0,0 };
     public int[] demageGaveEnemy = new int[] {0,0,0,0 };
@@ -265,20 +266,30 @@ public class GameManager : MonoBehaviour
 
     public void GameOver(string result)
     {
+        if (PlayerResult == null || EnemyResult == null) { return; }
+        StartCoroutine(WaitBeforeResult(result));
+    }
+
+    IEnumerator WaitBeforeResult(string result)
+    {
+        yield return new WaitForSeconds(2);
+
         Time.timeScale = 0.1f;
         gameOverPanel.SetActive(true);
 
-        if (PlayerResult == null || EnemyResult == null) { return; }
+        
 
         if (result == "Win")
         {
             PlayerResult.text = "VICTORY";
             EnemyResult.text = "DEFEAT";
+            roundResult = true;
         }
         else
         {
             PlayerResult.text = "DEFEAT";
             EnemyResult.text = "VICTORY";
+            roundResult = false;
         }
     }
 }

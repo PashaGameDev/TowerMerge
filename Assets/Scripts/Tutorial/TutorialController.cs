@@ -88,7 +88,7 @@ public class TutorialController : MonoBehaviour
 
     public void RunSuperShotStep()
     {
-        SetPopupState(true, "Finish Him",0f);
+        SetPopupState(true, "Finish Him to Get Extra Resources!",0f);
         CreatEnemy(null);
     }
 

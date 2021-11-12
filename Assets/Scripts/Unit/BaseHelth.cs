@@ -8,6 +8,7 @@ public class BaseHelth : MonoBehaviour
     [SerializeField] int maxHelth = 100;
     private int helth = 100;
     [SerializeField] Helth helthView = null;
+    [SerializeField] GameObject VFXExplosin = null;
    
     public static event Action<string> baseDistroyed;
 
@@ -42,7 +43,8 @@ public class BaseHelth : MonoBehaviour
             baseDistroyed?.Invoke("Lose");
         }
 
-        
+        if (VFXExplosin != null)
+        { Instantiate(VFXExplosin, gameObject.transform.position, Quaternion.identity); }
         Destroy(gameObject);
     }
 

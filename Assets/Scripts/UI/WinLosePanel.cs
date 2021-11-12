@@ -10,12 +10,16 @@ public class WinLosePanel : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI totalDemageUnit = null;
     [SerializeField] private TextMeshProUGUI totalDemageEnemy = null;
+    [SerializeField] private TextMeshProUGUI totalExpText = null;
+
 
     [SerializeField] private List<TextMeshProUGUI> unitStatistics = new List<TextMeshProUGUI>();
     [SerializeField] private List<TextMeshProUGUI> enemyStatistics = new List<TextMeshProUGUI>();
 
     [SerializeField] private List<Image> unitStatisticsBars = new List<Image>();
     [SerializeField] private List<Image> enemyStatisticsBars = new List<Image>();
+
+    private int earnedExp = 0;
 
     private void Start()
     {
@@ -48,6 +52,8 @@ public class WinLosePanel : MonoBehaviour
               float amount  = ((100 / totalDemage) * totalDemegeEnemyInt) / 100;
             StartCoroutine(fillAmountAnimation(enemyStatisticsBars[i], 0.01f, amount,0.1f)) ;
         }
+
+        calculateExpResult();
     }
 
     IEnumerator fillAmountAnimation(Image progressBar, float step, float amount, float waitTime)
@@ -64,6 +70,23 @@ public class WinLosePanel : MonoBehaviour
             progressBar.fillAmount = amount;
         }
 
+    }
+
+    void calculateExpResult()
+    {
+        if (GameManager.instance.roundResult)
+        {
+            earnedExp = Mathf.RoundToInt(GameManager.instance.totalUnitDemageMade * 0.6f);
+            totalExpText.text = "EX: " + earnedExp;
+        }
+        else
+        {
+            earnedExp = Mathf.RoundToInt(GameManager.instance.totalUnitDemageMade * 0.1f);
+            totalExpText.text = "EX: " + earnedExp;
+        }
+        int playerExp = PlayerPrefs.GetInt("PlayerExp", 0) + earnedExp;
+        PlayerPrefs.SetInt("PlayerExp", playerExp);
+        
     }
 
 

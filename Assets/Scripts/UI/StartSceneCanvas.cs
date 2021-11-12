@@ -8,7 +8,7 @@ public class StartSceneCanvas : MonoBehaviour
 
     [SerializeField] private Animator anim = null;
     public List<GameObject> sqaudCollection = new List<GameObject>();
-
+   
     private string SceneToLoad = null;
 
     public void StartBattle(string SceneName)
