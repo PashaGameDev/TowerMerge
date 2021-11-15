@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class DummyEnemy : MonoBehaviour
 {
     [SerializeField] Animator anim = null;
+    [SerializeField] GameObject fingerPointer = null;
     [SerializeField] float Maxhelth = 100f;
     [SerializeField] Image hpImg = null;
 
@@ -27,6 +28,7 @@ public class DummyEnemy : MonoBehaviour
     {
         GetDemage(currentHelth*0.7f);
         anim.SetBool("isGetDemage", false);
+        fingerPointer.SetActive(true);
 
     }
     public void GetDemage(float demage)

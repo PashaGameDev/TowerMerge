@@ -49,6 +49,8 @@ public class PlayerBaseManager : MonoBehaviour
             GameManager.instance.SetSuperShotAmount(1);
             shootAmount = GameManager.instance.GetSuperShotAmount();
             CheckEnemyHighLights();
+            superShotImage.GetComponent<Image>().color = new Color(1f, 0.642753f, 0.1084906f, 1f);
+
             if (superShotHightLight != null)
             { superShotHightLight.SetActive(true); }
         }
@@ -59,6 +61,7 @@ public class PlayerBaseManager : MonoBehaviour
             currentTime += Time.deltaTime;
             float fillAmount = currentTime / countDown;
             superShotImage.fillAmount = fillAmount;
+            superShotImage.GetComponent<Image>().color = new Color(0.1405472f, 0.131764f, 0.5943396f, 1f);
         }
     }
 

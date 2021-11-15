@@ -9,6 +9,7 @@ public class TutorialUnit : MonoBehaviour
     [SerializeField] Animator anim = null;
     [SerializeField] GameObject arrowPointer = null;
     [SerializeField] GameObject shootFVX = null;
+    public GameObject fingerForMerge = null;
 
     private float offset = 0.5f;
     private int pointIndex = 0;
@@ -35,13 +36,18 @@ public class TutorialUnit : MonoBehaviour
     private void Start()
     {
         SetAllPointsList("Points");
+      
         
     }
     private void Update()
-    {
+    { 
         if (tutorialController.tutorialStep == 2|| tutorialController.tutorialStep == 6) { arrowPointer.SetActive(true); } else { arrowPointer.SetActive(false); }
-       
-        if (!isCanMove && anim.GetBool("isShoot")) { arrowPointer.SetActive(false); return; }
+        
+        if (!isCanMove && anim.GetBool("isShoot")) {
+            if (fingerForMerge != null) { fingerForMerge.SetActive(false); }
+            arrowPointer.SetActive(false);
+            return;
+        }
         if (!isCanMove) { return; }
         arrowPointer.SetActive(false);
         Move();

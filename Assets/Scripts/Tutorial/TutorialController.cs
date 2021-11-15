@@ -15,6 +15,10 @@ public class TutorialController : MonoBehaviour
     [SerializeField] TextMeshProUGUI HintText = null;
     [SerializeField] Image unitIcon = null;
     [SerializeField] GameObject runBtn = null;
+
+    [SerializeField] Image SuperShotProgressBar = null;
+    [SerializeField] GameObject SuperShotHighLight = null;
+
     public GameObject arrow = null;
     [SerializeField] GameObject tutorialUnit = null;
     public GameObject tutorialUnit2 = null;
@@ -35,7 +39,7 @@ public class TutorialController : MonoBehaviour
     public GameObject choosenUnit = null;
 
 
-    private int createdUnits = 0;
+    private GameObject firstCreatedUnits = null;
     private int amountEnemy = 0;
 
     Vector3 startPositionChoosenUnit = Vector3.zero;
@@ -90,6 +94,13 @@ public class TutorialController : MonoBehaviour
     {
         SetPopupState(true, "Finish Him to Get Extra Resources!",0f);
         CreatEnemy(null);
+        superShotHighLightSwicher(true);
+    }
+
+    public void superShotHighLightSwicher(bool state)
+    {
+        SuperShotHighLight.SetActive(state);
+        if (state) { SuperShotProgressBar.fillAmount = 1; } else { SuperShotProgressBar.fillAmount = 0; }
     }
 
     IEnumerator unitCreation()
@@ -108,7 +119,8 @@ public class TutorialController : MonoBehaviour
             SetPopupState(true, TutorialHints[tutorialStep], 0f);
             if (tutorialStep == 2)
             { CreatEnemy(unit1.GetComponent<TutorialUnit>()); }
-            else if(tutorialStep == 4) {arrow.SetActive(true); }
+            else if (tutorialStep == 4) { arrow.SetActive(true); firstCreatedUnits = unit1; } else if (tutorialStep == 5)
+            { firstCreatedUnits.GetComponent<TutorialUnit>().fingerForMerge.SetActive(true); }
         }
         else
         {
