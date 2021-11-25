@@ -19,6 +19,7 @@ public class MyUnit : Unit
         unitCreated?.Invoke(gameObject);
         SetAllPointsList("Points");
         SetEnemyBase();
+        GetComponent<Unit>().playSFX("created");
     }
 
     public void SetCell(CellManager cell)
@@ -36,6 +37,12 @@ public class MyUnit : Unit
     void Update()
     {
         Move();
+        if (GameManager.instance.isGameOver)
+        {
+           
+            GetComponent<Unit>().playSFX("Stop");
+        }
+
         if (isCanMove)
         {
             gameObject.layer = 2;

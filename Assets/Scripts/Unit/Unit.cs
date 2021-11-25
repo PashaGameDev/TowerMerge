@@ -25,6 +25,13 @@ public class Unit : MonoBehaviour
     public Transform bulletPoint = null;
     public GameObject bulletPrefab = null;
 
+    [SerializeField] AudioSource audio = null;
+    [SerializeField] AudioClip createdSFX = null;
+    [SerializeField] AudioClip shootSFX = null;
+    [SerializeField] AudioClip walkSFX = null;
+    [SerializeField] AudioClip dieSFX = null;
+
+
     private float speed = 5f;
     private int helth = 100;
     private GameObject target = null;
@@ -34,6 +41,41 @@ public class Unit : MonoBehaviour
     private float chasingT = 0f;
     private List<GameObject> targetList = new List<GameObject>();
     private GameObject enemyBase;
+ 
+    
+    public void playSFX(string nameSFX)
+    {
+        if (audio == null) { return; }
+        switch (nameSFX)
+        {
+            case "created":
+                audio.clip = createdSFX;
+                audio.loop = false;
+                break;
+            case "Shoot":
+                audio.clip = shootSFX;
+                audio.loop = true;
+                break;
+            case "Walk":
+                audio.clip = walkSFX;
+                audio.loop = true;
+                break;
+            case "Die":
+                audio.clip = dieSFX;
+                audio.loop = false;
+                break;
+            case "Stop":
+                audio.Stop();
+                return;
+               // break;
+            default:
+                break;
+        }
+        if (!audio.isPlaying) { audio.Play(); }
+       
+        
+    }
+    
 
     IEnumerator initBullet()
     {
@@ -125,6 +167,7 @@ public class Unit : MonoBehaviour
         dir = new Vector3(dir.x, dir.y, dir.z);
         SwitchAnimation("isMove", true);
         SwitchAnimation("isShoot", false);
+        playSFX("Walk");
         transform.Translate(dir.normalized * speed * Time.deltaTime, Space.World);
     }
 
@@ -190,6 +233,7 @@ public class Unit : MonoBehaviour
                 Vector3 dir = target.transform.position - transform.position;
                 RotateToTarget(dir, transform, speed * 5);
                 SwitchAnimation("isShoot", true);
+                playSFX("Shoot");
                 if (bulletPoint != null && bulletPrefab != null) { StartCoroutine(initBullet()); }
                 break;
             }
@@ -230,6 +274,7 @@ public class Unit : MonoBehaviour
             gameObject.GetComponent<Rigidbody>().useGravity = false;
         
         SwitchAnimation("isDied", true);
+        playSFX("Die");
         isCanMove = false;
         Destroy(this.gameObject, 2f); 
     }

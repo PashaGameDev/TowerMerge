@@ -8,6 +8,9 @@ public class BuidUnitBtn : MonoBehaviour
     [SerializeField] int unitType;
     [SerializeField] Image unitIcon;
     [SerializeField] private float buildDelay = 3f;
+    [SerializeField] AudioClip clickSFX = null;
+    [SerializeField] AudioClip unitCreationSFX = null;
+    [SerializeField] AudioSource audio = null;
 
     private GameObject unitPrefab;
     private int price;
@@ -20,12 +23,14 @@ public class BuidUnitBtn : MonoBehaviour
 
     public void TryBuild()
     {
+        
         unitPrefab = GameManager.instance.getUnitToCreat(unitType, 0);
         if (unitPrefab == null) { return; }
         price = unitPrefab.GetComponent<MyUnit>().price;
 
         if (GameManager.instance.isPurchaseble(price) && !isBusy)
         {
+            if (audio != null && clickSFX != null) { audio.clip = clickSFX; audio.Play(); }
             cell = GameManager.instance.GetCell();
             if (cell == null) { return; }
             isBusy = true;

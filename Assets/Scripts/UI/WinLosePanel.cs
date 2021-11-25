@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class WinLosePanel : MonoBehaviour
 {
+   
     [SerializeField] private GameObject blackPanel = null;
 
     [SerializeField] private TextMeshProUGUI totalDemageUnit = null;

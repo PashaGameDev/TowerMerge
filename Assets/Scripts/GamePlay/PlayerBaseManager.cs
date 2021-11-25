@@ -19,6 +19,11 @@ public class PlayerBaseManager : MonoBehaviour
     [SerializeField] private GameObject superShotHightLight = null;
 
     [SerializeField] private LineRenderer liser;
+
+    [SerializeField] private AudioSource audio = null;
+    [SerializeField] private AudioClip superShootSFX = null;
+    [SerializeField] private AudioClip creatTurretSFX = null;
+
     private Vector3 liserStartPosition;
 
    
@@ -49,7 +54,7 @@ public class PlayerBaseManager : MonoBehaviour
             GameManager.instance.SetSuperShotAmount(1);
             shootAmount = GameManager.instance.GetSuperShotAmount();
             CheckEnemyHighLights();
-            superShotImage.GetComponent<Image>().color = new Color(1f, 0.642753f, 0.1084906f, 1f);
+            superShotImage.GetComponent<Image>().color = new Color(0.8588236f, 0.4705883f, 0.2313726f, 1f);
 
             if (superShotHightLight != null)
             { superShotHightLight.SetActive(true); }
@@ -61,7 +66,7 @@ public class PlayerBaseManager : MonoBehaviour
             currentTime += Time.deltaTime;
             float fillAmount = currentTime / countDown;
             superShotImage.fillAmount = fillAmount;
-            superShotImage.GetComponent<Image>().color = new Color(0.1405472f, 0.131764f, 0.5943396f, 1f);
+            superShotImage.GetComponent<Image>().color = new Color(0f, 0.9693694f, 1f, 0.6862745f);
         }
     }
 
@@ -104,6 +109,12 @@ public class PlayerBaseManager : MonoBehaviour
         }
 #endif
     }
+
+    void playSFX(AudioClip clip)
+    {
+        audio.clip = clip;
+        audio.Play();
+    }
     void SuperShotAction(Vector3 inputPos)
     {
         Ray ray = Camera.main.ScreenPointToRay(inputPos);
@@ -134,7 +145,8 @@ public class PlayerBaseManager : MonoBehaviour
             enemy.GetDemage(superShotPower);
             shootAmount--;
             GameManager.instance.SetSuperShotAmount(shootAmount);
-         //   CheckEnemyHighLights();
+            playSFX(superShootSFX);
+            //   CheckEnemyHighLights();
             currentTime = 0f;
         }
         else if (hit.transform.gameObject.layer == 11)
@@ -161,6 +173,7 @@ public class PlayerBaseManager : MonoBehaviour
         turret.GetComponent<Turret>().cell = turretCell.GetComponent<CellTurret>();
         turretCell.GetComponent<CellTurret>().turretOnPlace = Instantiate(turret, turretPosition, Quaternion.identity);
         turretCell.GetComponent<CellTurret>().SetState(true);
+        playSFX(creatTurretSFX);
     }
 
     void LookAtTarget(Transform targetPoit)

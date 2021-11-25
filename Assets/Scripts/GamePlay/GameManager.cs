@@ -7,6 +7,9 @@ using TMPro;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] Text EnemyBalanceText;
+    [SerializeField] AudioSource audio = null;
+    [SerializeField] AudioClip winSFX = null;
+    [SerializeField] AudioClip loseSFX = null;
 
     public int superShotPower = 30;
     public int currentBalance = 100;
@@ -31,6 +34,8 @@ public class GameManager : MonoBehaviour
 
     public int[] demageGaveUnis = new int[] {0,0,0,0 };
     public int[] demageGaveEnemy = new int[] {0,0,0,0 };
+
+    public bool isGameOver = false;
 
     public int GetDemageGaveUnis(int index)
     {
@@ -268,6 +273,7 @@ public class GameManager : MonoBehaviour
     {
         if (PlayerResult == null || EnemyResult == null) { return; }
         StartCoroutine(WaitBeforeResult(result));
+       
     }
 
     IEnumerator WaitBeforeResult(string result)
@@ -277,19 +283,25 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 0.1f;
         gameOverPanel.SetActive(true);
 
-        
+        isGameOver = true;
+        audio.Stop();
 
         if (result == "Win")
         {
             PlayerResult.text = "VICTORY";
             EnemyResult.text = "DEFEAT";
+            audio.clip = winSFX;
             roundResult = true;
         }
         else
         {
             PlayerResult.text = "DEFEAT";
             EnemyResult.text = "VICTORY";
+            audio.clip = loseSFX;
             roundResult = false;
         }
+
+        audio.loop = false;
+        audio.Play();
     }
 }

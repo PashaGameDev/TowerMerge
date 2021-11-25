@@ -41,9 +41,10 @@ public class Helth : MonoBehaviour
             if (helthBar.fillAmount <= 0f) { canvas.SetActive(false); }
             return;
         }
-        if ((maxHlth - currentHelth) > 0)
+        if ((maxHlth - currentHelth) > 0 && minusLifeText != null)
         {
             GameObject minusHPText = Instantiate(minusLifeText, canvas.transform.position, Quaternion.identity, canvas.transform);
+            if (minusHPText == null) { return; }
             minusHPText.GetComponent<TextMeshPro>().text = "-" + (maxHlth - currentHelth);
             Destroy(minusHPText, 0.8f);
         }

@@ -26,18 +26,28 @@ public class Turret : Unit
 
         if (cell != null)
         cell.GetComponent<CellTurret>().PriceViewState(false);
+
+        GetComponent<Unit>().playSFX("created");
     }
 
     
     private void Update()
     {
+        if (GameManager.instance.isGameOver)
+        {
+          
+            GetComponent<Unit>().playSFX("Stop");
+        }
+
         if (newTarget == null)
         {
             FindNewTarget();
             TurnOnOfShootVFX(false);
+            GetComponent<Unit>().playSFX("Stop");
         }
         else
         {
+            GetComponent<Unit>().playSFX("Shoot");
             ChaseNewTarget();
         }
     }
@@ -75,15 +85,17 @@ public class Turret : Unit
         float dis = Vector3.Distance(gameObject.transform.position, newTarget.transform.position);
         if (chasingDistance < dis)
         {
+            
             chaseTimer = 0;
             newTarget = null;
-            
+           
             return;
         }
 
         RotateToTarget(newTarget.transform.position - transform.position, partToRotate, 50f);
         if (chaseTimer <= 0)
         {
+            
             newTarget.GetComponent<Unit>().GetDemage(demage);
             TurnOnOfShootVFX(true);
             chaseTimer = chasingRate; 
@@ -109,6 +121,7 @@ public class Turret : Unit
             GameObject dieVFX = Instantiate(dieVFXPrefab, transform.position, Quaternion.identity);
             Destroy(dieVFX, 2f);
         }
+        GetComponent<Unit>().playSFX("Die");
     }
 
     private void TurnOnOfShootVFX(bool state)

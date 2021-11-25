@@ -7,6 +7,8 @@ public class StartSceneCanvas : MonoBehaviour
 {
 
     [SerializeField] private Animator anim = null;
+    [SerializeField] AudioSource audio = null;
+    [SerializeField] AudioClip clickSFX = null;
     public List<GameObject> sqaudCollection = new List<GameObject>();
    
     private string SceneToLoad = null;
@@ -14,6 +16,11 @@ public class StartSceneCanvas : MonoBehaviour
     public void StartBattle(string SceneName)
     {
         if (anim == null) { return; }
+        if (audio != null && clickSFX != null)
+        {
+            audio.clip = clickSFX;
+            audio.Play();
+        }
 
         SceneToLoad = SceneName;
         anim.SetBool("ButtleRun",true);

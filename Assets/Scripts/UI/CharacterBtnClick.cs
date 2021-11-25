@@ -11,12 +11,18 @@ public class CharacterBtnClick : MonoBehaviour
     [SerializeField] private Animator btnAnimator  = null;
     [SerializeField] private StartSceneCanvas canvas;
     [SerializeField] private Image stateImg;
+
+    [SerializeField] private AudioClip clickSFX = null;
+
+    [SerializeField] private AudioSource audio = null;
     // Start is called before the first frame update
 
     private void Start()
     {
         if (stateImg == null) { return; }
         changeStateStatus();
+
+       // audio = gameObject.GetComponent<AudioSource>();
     }
 
     void changeStateStatus()
@@ -33,8 +39,13 @@ public class CharacterBtnClick : MonoBehaviour
 
     public void btnClickReaction()
     {
+        if (audio != null)
+        {
+            audio.clip = clickSFX;
+            audio.Play();
+        }
         btnAnimator.SetBool("isClicked", true);
-     //   StartCoroutine(turnOffAnimation());
+        StartCoroutine(turnOffAnimation());
       //  AddUnitToCollection();
     }
 

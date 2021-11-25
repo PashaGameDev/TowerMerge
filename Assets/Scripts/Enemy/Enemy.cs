@@ -25,6 +25,11 @@ public class Enemy : Unit
     private void Update()
     {
         Move();
+        if (GameManager.instance.isGameOver)
+        {
+           
+            GetComponent<Unit>().playSFX("Stop");
+        }
 
         if (!isOnBase)
         {
