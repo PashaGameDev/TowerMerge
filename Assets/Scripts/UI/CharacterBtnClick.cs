@@ -9,35 +9,59 @@ public class CharacterBtnClick : MonoBehaviour
     public bool isChousen = false;
 
     [SerializeField] private Animator btnAnimator  = null;
-    [SerializeField] private StartSceneCanvas canvas;
     [SerializeField] private Image stateImg;
 
     [SerializeField] private AudioClip clickSFX = null;
 
     [SerializeField] private AudioSource audio = null;
+
+    [SerializeField] private MainMenuController mController = null; 
     // Start is called before the first frame update
 
     private void Start()
     {
         if (stateImg == null) { return; }
-        changeStateStatus();
+        //changeStateStatus();
 
-       // audio = gameObject.GetComponent<AudioSource>();
+        mController = GameObject.FindGameObjectWithTag("mController").GetComponent<MainMenuController>();
+        checkState();
     }
 
-    void changeStateStatus()
+    void checkState()
     {
-        if (!isChousen)
+       int chosen =  PlayerPrefs.GetInt("UnitType"+unitID);
+       
+        if (chosen > 0)
         {
-            stateImg.color = Color.white;
+            btnClickReaction(false);
         }
         else
         {
-            stateImg.color = Color.black;
+            btnClickReaction(true);
         }
     }
 
-    public void btnClickReaction()
+    public void btnPressed()
+    {
+        btnClickReaction(isChousen);
+    }
+    void btnClickReaction(bool currentState)
+    {
+        if (currentState)
+        {
+            stateImg.gameObject.SetActive(false);
+            mController.removeFromSquad(unitID);
+            isChousen = false;
+        }
+        else
+        {
+            stateImg.gameObject.SetActive(true);
+            mController.addToSquad(unitID);
+            isChousen = true;
+        }
+    }
+
+    /*public void btnClickReaction()
     {
         if (audio != null)
         {
@@ -46,8 +70,18 @@ public class CharacterBtnClick : MonoBehaviour
         }
         btnAnimator.SetBool("isClicked", true);
         StartCoroutine(turnOffAnimation());
+        if (isChousen)
+        {
+            stateImg.gameObject.SetActive(false);
+            mController.removeFromSquad(unitID);
+        }
+        else
+        {
+            stateImg.gameObject.SetActive(true);
+            mController.addToSquad(unitID);
+        }
       //  AddUnitToCollection();
-    }
+    }*/
 
     IEnumerator turnOffAnimation()
     {
@@ -58,7 +92,7 @@ public class CharacterBtnClick : MonoBehaviour
 
     void AddUnitToCollection()
     {
-    //    if (isChousen) { return; }
+    //    if  (isChousen) { return; }
      //   changeStateStatus();
      //   if (canvas.sqaudCollection[unitID] == null) { return;}
     }

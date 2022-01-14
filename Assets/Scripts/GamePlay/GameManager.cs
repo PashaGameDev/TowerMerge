@@ -6,6 +6,7 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
+    public UnitDataBase unitDataBase = null;
     [SerializeField] Text EnemyBalanceText;
     [SerializeField] AudioSource audio = null;
     [SerializeField] AudioClip winSFX = null;
@@ -60,6 +61,7 @@ public class GameManager : MonoBehaviour
     public GameObject getUnitToCreat(int unitType, int index)
 
     {
+       
         switch (unitType)
         {
             case 0:
@@ -86,6 +88,31 @@ public class GameManager : MonoBehaviour
     private int killedEnemy = 0;
     private float buildCountDown = 1f;
     private int superShotAmount = 0;
+
+    private void SetUnitBase()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            if (PlayerPrefs.GetInt("UnitType" + i) > 0)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    if (i == 0)
+                    {
+                        unitsArrayType1[j] = unitDataBase.unitsType1[j];
+                    }
+                    else if (i == 1)
+                    {
+                        unitsArrayType2[j] = unitDataBase.unitsType2[j];
+                    }
+                    else if (i == 2)
+                    {
+                        unitsArrayType3[j] = unitDataBase.unitsType3[j];
+                    }
+                }
+            }
+        }
+    }
 
     public void DecreaseEnemyBalace(int amount)
     {
@@ -151,6 +178,8 @@ public class GameManager : MonoBehaviour
         {
             cells.Add(cell);
         }
+
+        SetUnitBase();
     }
 
     public CellManager GetCell()
@@ -160,7 +189,7 @@ public class GameManager : MonoBehaviour
             if (cell.GetUnitOnPlace() == null)
             {
                 return cell;
-               // break
+              
             }
         }
         return null;
@@ -302,6 +331,7 @@ public class GameManager : MonoBehaviour
         }
 
         audio.loop = false;
+        audio.volume = 1f;
         audio.Play();
     }
 }

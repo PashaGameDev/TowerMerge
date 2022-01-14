@@ -20,11 +20,13 @@ public class textColorChanger : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GameManager.instance.unitsArrayType1[UnitIndex] != null && priceText == null)
+        
+        if (GameManager.instance.unitsArrayType1[UnitIndex] != null || priceText == null)
         {
             instParameters();
         }
 
+        if (priceText == null) { return; }
         if (GameManager.instance.currentBalance >= unitPrice)
         {
             priceText.color = Color.white;
@@ -40,14 +42,17 @@ public class textColorChanger : MonoBehaviour
         switch (UnitIndex)
         {
             case 0:
+                if (GameManager.instance.unitsArrayType1[0] == null) { return; }
                 unitPrice = GameManager.instance.unitsArrayType1[0].GetComponent<MyUnit>().price;
                 break;
 
             case 1:
+                if (GameManager.instance.unitsArrayType2[0] == null) { return; }
                 unitPrice = GameManager.instance.unitsArrayType2[0].GetComponent<MyUnit>().price;
                 break;
 
             case 2:
+                if (GameManager.instance.unitsArrayType3[0] == null) { return; }
                 unitPrice = GameManager.instance.unitsArrayType3[0].GetComponent<MyUnit>().price;
                 break;
 

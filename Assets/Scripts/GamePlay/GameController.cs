@@ -87,8 +87,9 @@ public class GameController : MonoBehaviour
 
             if(prefabToInstaniate == null){ CleanChoosenUnit(); return; }
             GameObject newUnit = Instantiate(prefabToInstaniate, intersectedObject.transform.position, Quaternion.identity);
-
+            intersectedObject.GetComponent<MyUnit>().GetCell().SpawnMegreEffect();
             newUnit.GetComponent<MyUnit>().SetCell(intersectedObject.GetComponent<MyUnit>().GetCell());
+
             choosenUnit.GetComponent<MyUnit>().cleanCell();
 
             Destroy(choosenUnit);

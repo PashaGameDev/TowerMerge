@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class StartSceneCanvas : MonoBehaviour
 {
-
     [SerializeField] private Animator anim = null;
     [SerializeField] AudioSource audio = null;
     [SerializeField] AudioClip clickSFX = null;
