@@ -48,9 +48,9 @@ Material:
     - _ZSmooth: -0.5
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _HColor: {r: 0.6, g: 0.6, b: 0.6, a: 1}
-    - _OutlineColor: {r: 0.14901961, g: 0.14901961, b: 0.14901961, a: 1}
-    - _RimColor: {r: 0.8, g: 0.8, b: 0.8, a: 0.6}
+    - _HColor: {r: 0, g: 0, b: 0, a: 1}
+    - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _RimColor: {r: 1, g: 0, b: 0, a: 0.6}
     - _RimDir: {r: 0, g: 0, b: 1, a: 0}
     - _SColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
     - _SpecColor: {r: 0.27205884, g: 0.27205884, b: 0.27205884, a: 1}

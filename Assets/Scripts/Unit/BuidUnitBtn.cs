@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class BuidUnitBtn : MonoBehaviour
 {
+    [SerializeField] int spotID;
     [SerializeField] int unitType;
     [SerializeField] Image unitIcon;
     [SerializeField] private float buildDelay = 3f;
@@ -20,27 +21,13 @@ public class BuidUnitBtn : MonoBehaviour
     CellManager cell;
     GameObject unitRef = null;
 
-    private void Start()
-    {
-        StartCoroutine(SetIcons());
-    }
-
-    IEnumerator SetIcons()
-    {
-        yield return new WaitForSeconds(1f);
-
-        int i = PlayerPrefs.GetInt("UnitType" + (unitType - 1));
-        if (i > 0)
-        {
-            unitIcon.sprite = GameManager.instance.unitDataBase.Icons[unitType - 1];
-        }
-    }
 
     public void TryBuild()
     {
         
-        unitPrefab = GameManager.instance.getUnitToCreat(unitType, 0);
+        unitPrefab = GameManager.instance.getUnitToCreat(spotID, 0);
         if (unitPrefab == null) {  return; }
+
         price = unitPrefab.GetComponent<MyUnit>().price;
 
         if (GameManager.instance.isPurchaseble(price) && !isBusy)
@@ -86,10 +73,9 @@ public class BuidUnitBtn : MonoBehaviour
     void makeUnitVisible()
     {
         unitRef.SetActive(true);
+        unitRef.GetComponent<MyUnit>().GetCell().UnitSpawnEffectShow();
         unitRef = null;
         isBusy = false;
+
     }
-
-
-
 }

@@ -21,7 +21,7 @@ public class textColorChanger : MonoBehaviour
     void Update()
     {
         
-        if (GameManager.instance.unitsArrayType1[UnitIndex] != null || priceText == null)
+        if (GameManager.instance.unitsArrayType1[0] != null || priceText == null)
         {
             instParameters();
         }
@@ -37,21 +37,21 @@ public class textColorChanger : MonoBehaviour
         }
     }
 
-    void instParameters()
+     void instParameters()
     {
         switch (UnitIndex)
         {
-            case 0:
+            case 1:
                 if (GameManager.instance.unitsArrayType1[0] == null) { return; }
                 unitPrice = GameManager.instance.unitsArrayType1[0].GetComponent<MyUnit>().price;
                 break;
 
-            case 1:
+            case 2:
                 if (GameManager.instance.unitsArrayType2[0] == null) { return; }
                 unitPrice = GameManager.instance.unitsArrayType2[0].GetComponent<MyUnit>().price;
                 break;
 
-            case 2:
+            case 3:
                 if (GameManager.instance.unitsArrayType3[0] == null) { return; }
                 unitPrice = GameManager.instance.unitsArrayType3[0].GetComponent<MyUnit>().price;
                 break;

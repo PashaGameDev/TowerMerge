@@ -13,6 +13,7 @@ public class MyUnit : Unit
 
     public int price = 30;
     public int giveForKill = 20;
+    public int supTypeID = 0;
 
     private void Start()
     {

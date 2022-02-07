@@ -258,11 +258,13 @@ public class Unit : MonoBehaviour
                 GameManager.instance.SetDemageGaveEnemy(unitType, demage);
             }
             
-            chasingT = chasingRate;
+            chasingT = chasingRate;  
         }
         else
         {
             chasingT -= Time.deltaTime;
+            Vector3 dir = target.transform.position - transform.position;
+            RotateToTarget(dir, transform, speed * 15);
         }
     }
 

@@ -82,7 +82,7 @@ public class GameController : MonoBehaviour
             choosenUnit.GetComponent<MyUnit>().unitType == intersectedObject.GetComponent<MyUnit>().unitType
             )
         {
-            prefabToInstaniate = GameManager.instance.getUnitToCreat(choosenUnit.GetComponent<MyUnit>().unitType,
+            prefabToInstaniate = GameManager.instance.getUnitToCreat(choosenUnit.GetComponent<MyUnit>().supTypeID,
                                  intersectedObject.GetComponent<MyUnit>().level++);
 
             if(prefabToInstaniate == null){ CleanChoosenUnit(); return; }

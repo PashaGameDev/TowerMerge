@@ -7,6 +7,7 @@ public class CellManager : MonoBehaviour
     private GameObject unitOnPlace = null;
     [SerializeField] private GameObject child = null;
     [SerializeField] private GameObject mergeEffectSpaner = null;
+    [SerializeField] private GameObject unitSpawnEffect = null;
 
     public GameObject GetUnitOnPlace()
     {
@@ -24,13 +25,19 @@ public class CellManager : MonoBehaviour
     {
         if (mergeEffectSpaner == null) { return; }
         mergeEffectSpaner.SetActive(true);
-        StartCoroutine(hideSpawner());
+        StartCoroutine(hideSpawner(mergeEffectSpaner));
     }
 
-    IEnumerator hideSpawner()
+    public void UnitSpawnEffectShow()
+    {
+        if (unitSpawnEffect == null) { return; }
+        unitSpawnEffect.SetActive(true);
+        hideSpawner(unitSpawnEffect);
+    }
+    IEnumerator hideSpawner(GameObject obj)
     {
         yield return new WaitForSeconds(1f);
 
-        mergeEffectSpaner.SetActive(false);
+        obj.SetActive(false);
     }
 }

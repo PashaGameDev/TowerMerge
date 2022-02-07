@@ -6,7 +6,8 @@ using UnityEngine.UI;
 
 public class WinLosePanel : MonoBehaviour
 {
-   
+
+    [SerializeField] private TextMeshProUGUI playerName = null;
     [SerializeField] private GameObject blackPanel = null;
 
     [SerializeField] private TextMeshProUGUI totalDemageUnit = null;
@@ -20,7 +21,10 @@ public class WinLosePanel : MonoBehaviour
     [SerializeField] private List<Image> unitStatisticsBars = new List<Image>();
     [SerializeField] private List<Image> enemyStatisticsBars = new List<Image>();
 
+    [SerializeField] private List<Image> finalIcons = new List<Image>();
+
     private int earnedExp = 0;
+   
 
     private void Start()
     {
@@ -28,7 +32,7 @@ public class WinLosePanel : MonoBehaviour
 
         totalDemageUnit.text = GameManager.instance.totalUnitDemageMade.ToString();
         totalDemageEnemy.text = GameManager.instance.totalEnemyDemageMade.ToString();
-
+        fillIcons();
         for (int i = 0; i < unitStatistics.Count; i++)
         {
             float totalDemegeUnitInt = GameManager.instance.GetDemageGaveUnis(i + 1);
@@ -57,6 +61,21 @@ public class WinLosePanel : MonoBehaviour
         calculateExpResult();
     }
 
+
+    void fillIcons()
+    {
+        playerName.text = PlayerPrefs.GetString("UserName");
+        int i = 0;
+        foreach (var unit in GameManager.instance.unitDataBase.squad)
+        {
+            if (unit == null) return;
+            if (i >= finalIcons.Count) { return; }
+            finalIcons[i].sprite = GameManager.instance.unitDataBase.Icons[unit.GetComponent<MyUnit>().unitType - 1];
+            finalIcons[i].gameObject.SetActive(true);
+            i++;
+        }
+    }
+
     IEnumerator fillAmountAnimation(Image progressBar, float step, float amount, float waitTime)
     {
         yield return new WaitForSeconds(waitTime);
@@ -75,6 +94,7 @@ public class WinLosePanel : MonoBehaviour
 
     void calculateExpResult()
     {
+   
         if (GameManager.instance.roundResult)
         {
             earnedExp = Mathf.RoundToInt(GameManager.instance.totalUnitDemageMade * 0.6f);

@@ -7,6 +7,7 @@ using Random = UnityEngine.Random;
 
 public class EnemyBase : MonoBehaviour
 {
+    [SerializeField] int maxEnemyOnTheScene = 5;
     [SerializeField] GameObject[] enemyPrefabs;
     [SerializeField] float timeForThinking = 1.0f;
     [SerializeField] int defaultErningAmount = 5;
@@ -121,7 +122,7 @@ public class EnemyBase : MonoBehaviour
         GameObject enemyToBuild = enemyPrefabs[unitIndex];
         
          
-        if (GameManager.instance.enemyBalance >= enemyToBuild.GetComponent<Enemy>().price)
+        if (GameManager.instance.enemyBalance >= enemyToBuild.GetComponent<Enemy>().price && GameManager.instance.AllEnemies.Count < maxEnemyOnTheScene)
         {
             int countCells = 0;
             foreach (var cell in allCells)

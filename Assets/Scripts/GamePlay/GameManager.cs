@@ -26,6 +26,9 @@ public class GameManager : MonoBehaviour
     public GameObject[] unitsArrayType2 = null;
     public GameObject[] unitsArrayType3 = null;
     public GameObject[] turretsArray = null;
+
+    public Image[] SquadBtnIcons = null;
+
     public GameObject gameOverPanel = null;
     public TextMeshProUGUI PlayerResult = null;
     public TextMeshProUGUI EnemyResult = null;
@@ -45,6 +48,7 @@ public class GameManager : MonoBehaviour
 
     public void SetDemageGaveUnis(int index, int demageAmount)
     {
+        if (index >= demageGaveUnis.Length) { return; }
         demageGaveUnis[index] += demageAmount;
     }
 
@@ -89,27 +93,41 @@ public class GameManager : MonoBehaviour
     private float buildCountDown = 1f;
     private int superShotAmount = 0;
 
+    private void FillArry(GameObject [] currentArray, int id, int setTypeNum)
+    {
+            int i = 0;
+            foreach (var unitKind in unitDataBase.GetArray(id))
+            {
+            if (unitKind == null) { return; }
+              currentArray[i] = unitKind;
+            currentArray[i].GetComponent<MyUnit>().supTypeID = setTypeNum;
+              i++;
+            } 
+    }
     private void SetUnitBase()
     {
-        for (int i = 0; i < 3; i++)
+        int squadSize = unitDataBase.GetSquadSize();
+      
+        for (int i = 1; i <= squadSize; i++)
         {
-            if (PlayerPrefs.GetInt("UnitType" + i) > 0)
+            if (unitDataBase.squad[i - 1] == null) { break; }
+            int unitID = unitDataBase.squad[i-1].GetComponent<Unit>().unitType;
+            switch (i)
             {
-                for (int j = 0; j < 3; j++)
-                {
-                    if (i == 0)
-                    {
-                        unitsArrayType1[j] = unitDataBase.unitsType1[j];
-                    }
-                    else if (i == 1)
-                    {
-                        unitsArrayType2[j] = unitDataBase.unitsType2[j];
-                    }
-                    else if (i == 2)
-                    {
-                        unitsArrayType3[j] = unitDataBase.unitsType3[j];
-                    }
-                }
+                case 1:
+                    SquadBtnIcons[0].sprite = unitDataBase.Icons[unitID -1];
+                    FillArry(unitsArrayType1, unitID, 1);
+                    break;
+                case 2:
+                    SquadBtnIcons[1].sprite = unitDataBase.Icons[unitID - 1];
+                    FillArry(unitsArrayType2, unitID, 2);                    
+                    break;
+                case 3:
+                    SquadBtnIcons[2].sprite = unitDataBase.Icons[unitID - 1];
+                    FillArry(unitsArrayType3, unitID, 3);                   
+                    break;
+                default:
+                    break;
             }
         }
     }
