@@ -21,13 +21,15 @@ public class textColorChanger : MonoBehaviour
     void Update()
     {
         
+       
         if (GameManager.instance.unitsArrayType1[0] != null || priceText == null)
         {
             instParameters();
         }
 
         if (priceText == null) { return; }
-        if (GameManager.instance.currentBalance >= unitPrice)
+
+        if (GameManager.instance.currentBalance >= unitPrice && priceText != null)
         {
             priceText.color = Color.white;
         }
@@ -59,8 +61,9 @@ public class textColorChanger : MonoBehaviour
             default:
                 break;
         }
-       
+        
         priceText = gameObject.GetComponent<TMP_Text>();
+        
         priceText.text = unitPrice.ToString();
     }
 }

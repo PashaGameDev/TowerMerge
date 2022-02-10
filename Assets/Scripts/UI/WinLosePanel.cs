@@ -64,7 +64,11 @@ public class WinLosePanel : MonoBehaviour
 
     void fillIcons()
     {
-        playerName.text = PlayerPrefs.GetString("UserName");
+        if (PlayerPrefs.GetString("UserName") != null && playerName != null)
+        {
+            playerName.text = PlayerPrefs.GetString("UserName");
+        }
+       
         int i = 0;
         foreach (var unit in GameManager.instance.unitDataBase.squad)
         {

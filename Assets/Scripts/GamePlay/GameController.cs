@@ -31,7 +31,7 @@ public class GameController : MonoBehaviour
         if (Mouse.current.leftButton.wasReleasedThisFrame)
         {
             lastMousePosition = Input.mousePosition;
-            if (choosenUnit != null) { choosenUnit.layer = 6; }
+           // if (choosenUnit != null) { choosenUnit.layer = 6; }
             Merge();
         }
 #else
@@ -54,7 +54,7 @@ public class GameController : MonoBehaviour
 
                 case UnityEngine.TouchPhase.Ended:
                     lastMousePosition = touch.position;
-                    if (choosenUnit != null) { choosenUnit.layer = 6; }
+                   // if (choosenUnit != null) { choosenUnit.layer = 6; }
                     Merge();
 
                     break;
@@ -66,17 +66,18 @@ public class GameController : MonoBehaviour
 
     void Merge()
     {
+      
         float mouseMoveDis = Vector3.Distance(startMousPosition,lastMousePosition);
-        if (mouseMoveDis <= mouseOffset && choosenUnit != null)
+        if (mouseMoveDis <= mouseOffset && choosenUnit != null && !choosenUnit.GetComponent<MyUnit>().isOnMerge)
         {
-            choosenUnit.GetComponent<MyUnit>().isCanMove = true;
             choosenUnit.GetComponent<MyUnit>().myCell.SetuUnitOnPlace(null, Color.white);
-                
+            choosenUnit.GetComponent<MyUnit>().isCanMove = true;
             choosenUnit = null;
             CleanChoosenUnit();
             return;
         }
 
+       
         if (choosenUnit != null && intersectedObject != null &&
             choosenUnit.GetComponent<MyUnit>().level == intersectedObject.GetComponent<MyUnit>().level &&
             choosenUnit.GetComponent<MyUnit>().unitType == intersectedObject.GetComponent<MyUnit>().unitType
@@ -86,14 +87,13 @@ public class GameController : MonoBehaviour
                                  intersectedObject.GetComponent<MyUnit>().level++);
 
             if(prefabToInstaniate == null){ CleanChoosenUnit(); return; }
-            GameObject newUnit = Instantiate(prefabToInstaniate, intersectedObject.transform.position, Quaternion.identity);
-            intersectedObject.GetComponent<MyUnit>().GetCell().SpawnMegreEffect();
-            newUnit.GetComponent<MyUnit>().SetCell(intersectedObject.GetComponent<MyUnit>().GetCell());
 
-            choosenUnit.GetComponent<MyUnit>().cleanCell();
+            choosenUnit.GetComponent<MyUnit>().isOnMerge = true;
+            intersectedObject.GetComponent<MyUnit>().isOnMerge = true;
+            choosenUnit.GetComponent<Unit>().anim.SetTrigger("leftMerge");
+            intersectedObject.GetComponent<Unit>().anim.SetTrigger("rightMerge");
+            StartCoroutine(waitForMergeVFX());
 
-            Destroy(choosenUnit);
-            Destroy(intersectedObject);
         }
         else
         {
@@ -101,9 +101,36 @@ public class GameController : MonoBehaviour
         }
     }
 
+    IEnumerator waitForMergeVFX()
+    {
+        yield return new WaitForSeconds(0.3f);
+
+        if (intersectedObject != null)
+        {
+
+            Vector3 pos = intersectedObject.transform.position;
+            intersectedObject.GetComponent<MyUnit>().GetCell().SpawnMegreEffect();
+            CellManager cell = intersectedObject.GetComponent<MyUnit>().GetCell();
+            choosenUnit.GetComponent<MyUnit>().cleanCell();
+
+            Destroy(choosenUnit);
+            Destroy(intersectedObject);
+
+            GameObject newUnit = Instantiate(prefabToInstaniate, pos, Quaternion.identity);
+            newUnit.GetComponent<MyUnit>().isOnMerge = false;
+            newUnit.GetComponent<MyUnit>().SetCell(cell);
+        }
+    }
     void CleanChoosenUnit()
     {
-        if (choosenUnit != null) { choosenUnit.transform.position = startPositionChoosenUnit; }
+        if (choosenUnit != null) {
+            choosenUnit.layer = 6;
+            choosenUnit.GetComponent<MyUnit>().isOnMerge = false;
+            choosenUnit.transform.position = startPositionChoosenUnit;
+        }
+
+        
+        //intersectedObject.GetComponent<MyUnit>().isOnMerge = false;
 
         choosenUnit = null;
         intersectedObject = null;
@@ -118,14 +145,17 @@ public class GameController : MonoBehaviour
         if (choosenUnit != null)
         {
             choosenUnit.transform.position = new Vector3(hit.point.x, choosenUnit.transform.position.y, hit.point.z);
-        }
+            
+        } 
 
         if (hit.collider.TryGetComponent<MyUnit>(out MyUnit myUnit) )
         {
+            if (hit.collider.gameObject.GetComponent<MyUnit>().isOnMerge) { return; }
             SetChoosenUnit(hit.collider.gameObject);
         }
         else
         {
+            if (hit.collider.gameObject.GetComponent<MyUnit>() == null || hit.collider.gameObject.GetComponent<MyUnit>().isOnMerge) { return; }
             intersectedObject = null;
         }
 
@@ -135,8 +165,8 @@ public class GameController : MonoBehaviour
         //if (t.GetComponent<MyUnit>().isCanMove) { CleanChoosenUnit(); return; }
         if (choosenUnit != null) { intersectedObject = t; return; }
         choosenUnit = t;
+      //  t.GetComponent<MyUnit>().isOnMerge = true;
         choosenUnit.layer = 8;
-      
         startPositionChoosenUnit = choosenUnit.transform.position;
     }
 }
